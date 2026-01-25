@@ -1,0 +1,330 @@
+# VPS Singapore 09 Deployment Configuration
+# Device: NUNA 💻 | User: @mouyleng 🧑‍💻 | Org: @A6-9V 🏙️
+
+# Server Configuration
+server:
+  name: singapore-09
+  region: ap-southeast-1
+  location: Singapore
+  provider: "${VPS_PROVIDER}"
+  
+  # Connection Details
+  connection:
+    host: "${VPS_IP}"
+    port: 22
+    user: ubuntu
+    key_file: ~/.ssh/a6-9v-nuna-key
+    
+  # Hardware Specs
+  specs:
+    cpu: 4 vCPU
+    memory: 8 GB
+    storage: 100 GB SSD
+    network: 1 Gbps
+    os: Ubuntu 22.04 LTS
+
+# Docker Deployment
+docker:
+  enabled: true
+  
+  # Docker Compose Configuration
+  compose:
+    version: "3.9"
+    services:
+      trading-bot:
+        image: genx-fx:latest
+        container_name: genx_fx_trading
+        restart: always
+        ports:
+          - "8080:8080"
+          - "9090:9090"
+        environment:
+          - TZ=Asia/Singapore
+          - TRADING_MODE=production
+        volumes:
+          - ./data:/app/data
+          - ./logs:/app/logs
+          - ./config:/app/config
+        healthcheck:
+          test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+          interval: 30s
+          timeout: 10s
+          retries: 3
+          
+      redis:
+        image: redis:7-alpine
+        container_name: genx_fx_redis
+        restart: always
+        ports:
+          - "6379:6379"
+        volumes:
+          - redis_data:/data
+          
+      prometheus:
+        image: prom/prometheus:latest
+        container_name: genx_fx_prometheus
+        restart: always
+        ports:
+          - "9091:9090"
+        volumes:
+          - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+          - prometheus_data:/prometheus
+          
+      grafana:
+        image: grafana/grafana:latest
+        container_name: genx_fx_grafana
+        restart: always
+        ports:
+          - "3000:3000"
+        environment:
+          - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+        volumes:
+          - grafana_data:/var/lib/grafana
+          
+    volumes:
+      redis_data:
+      prometheus_data:
+      grafana_data:
+
+# Nginx Configuration
+nginx:
+  enabled: true
+  config: |
+    server {
+        listen 80;
+        server_name ${TRADING_DOMAIN};
+        
+        location / {
+            return 301 https://$server_name$request_uri;
+        }
+    }
+    
+    server {
+        listen 443 ssl http2;
+        server_name ${TRADING_DOMAIN};
+        
+        ssl_certificate /etc/letsencrypt/live/${TRADING_DOMAIN}/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/${TRADING_DOMAIN}/privkey.pem;
+        
+        # Trading API
+        location /api {
+            proxy_pass http://localhost:8080;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+        }
+        
+        # WebSocket for real-time data
+        location /ws {
+            proxy_pass http://localhost:8080;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+        }
+        
+        # Grafana Dashboard
+        location /grafana/ {
+            proxy_pass http://localhost:3000/;
+        }
+        
+        # Prometheus Metrics
+        location /metrics {
+            proxy_pass http://localhost:9090;
+            auth_basic "Restricted";
+            auth_basic_user_file /etc/nginx/.htpasswd;
+        }
+        
+        # GitHub Webhooks
+        location /webhooks/github {
+            proxy_pass http://localhost:8080;
+        }
+    }
+
+# SSL/TLS Configuration
+ssl:
+  provider: letsencrypt
+  email: "${ADMIN_EMAIL}"
+  domains:
+    - "${TRADING_DOMAIN}"
+  auto_renew: true
+
+# Firewall Rules
+firewall:
+  rules:
+    - port: 22
+      protocol: tcp
+      source: "${ADMIN_IP}/32"
+      action: allow
+      comment: SSH access
+      
+    - port: 80
+      protocol: tcp
+      source: "0.0.0.0/0"
+      action: allow
+      comment: HTTP redirect
+      
+    - port: 443
+      protocol: tcp
+      source: "0.0.0.0/0"
+      action: allow
+      comment: HTTPS
+      
+    - port: 8080
+      protocol: tcp
+      source: "127.0.0.1"
+      action: allow
+      comment: Trading API (internal)
+      
+    - port: 9090
+      protocol: tcp
+      source: "127.0.0.1"
+      action: allow
+      comment: Prometheus (internal)
+      
+    - port: 3000
+      protocol: tcp
+      source: "127.0.0.1"
+      action: allow
+      comment: Grafana (internal)
+
+# Systemd Service
+systemd:
+  service_name: genx-fx-trading
+  config: |
+    [Unit]
+    Description=GenX-FX Trading Bot
+    After=docker.service network.target
+    Requires=docker.service
+
+    [Service]
+    Type=simple
+    User=ubuntu
+    WorkingDirectory=/opt/genx-fx
+    ExecStart=/usr/bin/docker-compose up
+    ExecStop=/usr/bin/docker-compose down
+    Restart=always
+    RestartSec=10
+
+    [Install]
+    WantedBy=multi-user.target
+
+# Cron Jobs for Scheduled Tasks
+cron_jobs:
+  # Data backup every 6 hours
+  - name: backup_data
+    schedule: "0 */6 * * *"
+    command: "/opt/genx-fx/scripts/backup_data.sh"
+    
+  # Model retraining daily at 2 AM
+  - name: retrain_models
+    schedule: "0 2 * * *"
+    command: "/opt/genx-fx/scripts/retrain_models.sh"
+    
+  # Health check every 5 minutes
+  - name: health_check
+    schedule: "*/5 * * * *"
+    command: "/opt/genx-fx/scripts/health_check.sh"
+    
+  # Log rotation daily
+  - name: log_rotation
+    schedule: "0 0 * * *"
+    command: "logrotate /etc/logrotate.d/genx-fx"
+
+# Monitoring Alerts
+monitoring:
+  healthchecks:
+    - name: trading_bot
+      url: http://localhost:8080/health
+      interval: 30s
+      timeout: 10s
+      
+    - name: database
+      url: http://localhost:6379/ping
+      interval: 60s
+      timeout: 5s
+      
+  alerts:
+    slack:
+      enabled: true
+      webhook_url: "${SLACK_WEBHOOK_URL}"
+      
+    email:
+      enabled: true
+      smtp_server: "${SMTP_SERVER}"
+      from: "alerts@${TRADING_DOMAIN}"
+      to:
+        - "${ADMIN_EMAIL}"
+
+# Deployment Scripts
+deployment_scripts:
+  setup: |
+    #!/bin/bash
+    set -e
+    
+    # Update system
+    sudo apt update && sudo apt upgrade -y
+    
+    # Install Docker
+    curl -fsSL https://get.docker.com -o get-docker.sh
+    sudo sh get-docker.sh
+    sudo usermod -aG docker ubuntu
+    
+    # Install Docker Compose
+    sudo apt install docker-compose -y
+    
+    # Install Nginx
+    sudo apt install nginx -y
+    
+    # Setup SSL with Certbot
+    sudo apt install certbot python3-certbot-nginx -y
+    
+    # Create directories
+    sudo mkdir -p /opt/genx-fx/{data,logs,config,scripts}
+    sudo chown -R ubuntu:ubuntu /opt/genx-fx
+    
+    echo "Setup complete!"
+    
+  deploy: |
+    #!/bin/bash
+    set -e
+    
+    cd /opt/genx-fx
+    
+    # Pull latest code
+    git pull origin main
+    
+    # Build Docker image
+    docker-compose build
+    
+    # Stop old containers
+    docker-compose down
+    
+    # Start new containers
+    docker-compose up -d
+    
+    # Wait for health check
+    sleep 30
+    curl -f http://localhost:8080/health || exit 1
+    
+    echo "Deployment successful!"
+    
+  rollback: |
+    #!/bin/bash
+    set -e
+    
+    cd /opt/genx-fx
+    
+    # Get previous version
+    PREV_VERSION=$(git rev-parse HEAD~1)
+    
+    # Checkout previous version
+    git checkout $PREV_VERSION
+    
+    # Rebuild and restart
+    docker-compose build
+    docker-compose down
+    docker-compose up -d
+    
+    echo "Rollback to $PREV_VERSION complete!"
