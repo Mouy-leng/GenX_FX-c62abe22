@@ -1,0 +1,414 @@
+# GenX_FX Trading Configuration
+# Device: NUNA 💻 | User: @mouyleng 🧑‍💻 | Org: @A6-9V 🏙️
+# VPS: Singapore 09 | Trading: 24/7
+
+# System Information
+system:
+  name: GenX_FX_NUNA
+  device: NUNA
+  owner: mouyleng
+  organization: A6-9V
+  environment: production
+  timezone: Asia/Singapore
+
+# VPS Deployment Configuration
+deployment:
+  vps:
+    region: singapore
+    server_id: singapore-09
+    provider: vps_provider  # Update with your VPS provider
+    ip: "${VPS_IP}"
+    port: 8080
+    ssl_enabled: true
+    domain: "${TRADING_DOMAIN}"
+  
+  resources:
+    cpu_cores: 4
+    memory_gb: 8
+    storage_gb: 100
+    network_bandwidth: 1Gbps
+
+# Trading Symbols Configuration
+# 10 Forex Pairs + Crypto Pairs for 24/7 Trading
+trading:
+  # Forex Pairs (10 Major Pairs)
+  forex_pairs:
+    - symbol: EURUSD
+      description: Euro / US Dollar
+      pip_value: 0.0001
+      lot_size: 100000
+      min_lot: 0.01
+      leverage: 100
+      
+    - symbol: GBPUSD
+      description: British Pound / US Dollar
+      pip_value: 0.0001
+      lot_size: 100000
+      min_lot: 0.01
+      leverage: 100
+      
+    - symbol: USDJPY
+      description: US Dollar / Japanese Yen
+      pip_value: 0.01
+      lot_size: 100000
+      min_lot: 0.01
+      leverage: 100
+      
+    - symbol: USDCHF
+      description: US Dollar / Swiss Franc
+      pip_value: 0.0001
+      lot_size: 100000
+      min_lot: 0.01
+      leverage: 100
+      
+    - symbol: AUDUSD
+      description: Australian Dollar / US Dollar
+      pip_value: 0.0001
+      lot_size: 100000
+      min_lot: 0.01
+      leverage: 100
+      
+    - symbol: NZDUSD
+      description: New Zealand Dollar / US Dollar
+      pip_value: 0.0001
+      lot_size: 100000
+      min_lot: 0.01
+      leverage: 100
+      
+    - symbol: USDCAD
+      description: US Dollar / Canadian Dollar
+      pip_value: 0.0001
+      lot_size: 100000
+      min_lot: 0.01
+      leverage: 100
+      
+    - symbol: EURJPY
+      description: Euro / Japanese Yen
+      pip_value: 0.01
+      lot_size: 100000
+      min_lot: 0.01
+      leverage: 100
+      
+    - symbol: GBPJPY
+      description: British Pound / Japanese Yen
+      pip_value: 0.01
+      lot_size: 100000
+      min_lot: 0.01
+      leverage: 100
+      
+    - symbol: EURGBP
+      description: Euro / British Pound
+      pip_value: 0.0001
+      lot_size: 100000
+      min_lot: 0.01
+      leverage: 100
+
+  # Crypto/Gold Pairs (24/7 Trading)
+  crypto_gold_pairs:
+    - symbol: BTCUSD
+      description: Bitcoin / US Dollar
+      pip_value: 0.01
+      lot_size: 1
+      min_lot: 0.001
+      leverage: 10
+      trading_hours: 24/7
+      
+    - symbol: XAUUSD
+      description: Gold / US Dollar
+      pip_value: 0.01
+      lot_size: 100
+      min_lot: 0.01
+      leverage: 50
+      trading_hours: 24/7
+      
+    - symbol: BTCXAU
+      description: Bitcoin / Gold (Cross-pair)
+      pip_value: 0.0001
+      lot_size: 1
+      min_lot: 0.001
+      leverage: 5
+      trading_hours: 24/7
+
+  # All Active Symbols
+  active_symbols:
+    # Forex
+    - EURUSD
+    - GBPUSD
+    - USDJPY
+    - USDCHF
+    - AUDUSD
+    - NZDUSD
+    - USDCAD
+    - EURJPY
+    - GBPJPY
+    - EURGBP
+    # Crypto/Gold (24/7)
+    - BTCUSD
+    - XAUUSD
+    - BTCXAU
+
+# 24/7 Trading Schedule Configuration
+schedule:
+  mode: continuous  # 24/7 operation
+  
+  # Forex Trading Sessions
+  forex_sessions:
+    sydney:
+      open: "22:00"  # UTC
+      close: "07:00"
+      timezone: Australia/Sydney
+      
+    tokyo:
+      open: "00:00"  # UTC
+      close: "09:00"
+      timezone: Asia/Tokyo
+      
+    london:
+      open: "08:00"  # UTC
+      close: "17:00"
+      timezone: Europe/London
+      
+    new_york:
+      open: "13:00"  # UTC
+      close: "22:00"
+      timezone: America/New_York
+
+  # Crypto/Gold (Always Active)
+  crypto_gold:
+    mode: 24/7
+    active_days: [monday, tuesday, wednesday, thursday, friday, saturday, sunday]
+    maintenance_window:
+      enabled: false
+      
+  # Session-based Strategy Selection
+  session_strategies:
+    asian:
+      active_hours: "00:00-09:00"
+      preferred_pairs: [USDJPY, AUDUSD, NZDUSD]
+      strategies: [mean_reversion, range_trading]
+      
+    european:
+      active_hours: "08:00-17:00"
+      preferred_pairs: [EURUSD, GBPUSD, EURGBP]
+      strategies: [momentum, breakout]
+      
+    american:
+      active_hours: "13:00-22:00"
+      preferred_pairs: [EURUSD, GBPUSD, USDJPY, USDCAD]
+      strategies: [momentum, trend_following]
+      
+    overlap_london_ny:
+      active_hours: "13:00-17:00"
+      preferred_pairs: [EURUSD, GBPUSD, USDJPY]
+      strategies: [breakout, momentum]
+      high_volatility: true
+      
+    crypto_continuous:
+      active_hours: "00:00-24:00"
+      preferred_pairs: [BTCUSD, XAUUSD, BTCXAU]
+      strategies: [momentum, mean_reversion, ml_prediction]
+
+# Risk Management
+risk_management:
+  # Per-Trade Limits
+  max_risk_per_trade: 0.02  # 2% of account
+  max_daily_loss: 0.05      # 5% daily loss limit
+  max_weekly_loss: 0.10     # 10% weekly loss limit
+  max_drawdown: 0.15        # 15% max drawdown
+  
+  # Position Limits
+  max_positions: 10
+  max_positions_per_symbol: 3
+  max_correlation: 0.7
+  max_leverage: 2.0
+  
+  # Emergency Controls
+  emergency_stop_loss: 0.20  # 20% emergency stop
+  circuit_breaker_enabled: true
+  
+  # Crypto/Gold Specific
+  crypto_gold_limits:
+    btc_max_position: 0.5    # 50% max in BTC
+    gold_max_position: 0.3   # 30% max in Gold
+    btcxau_max_position: 0.2 # 20% max in cross-pair
+
+# Strategy Configuration
+strategies:
+  momentum:
+    enabled: true
+    weight: 0.25
+    params:
+      rsi_period: 14
+      rsi_overbought: 70
+      rsi_oversold: 30
+      macd_fast: 12
+      macd_slow: 26
+      macd_signal: 9
+      
+  mean_reversion:
+    enabled: true
+    weight: 0.20
+    params:
+      bb_period: 20
+      bb_std_dev: 2
+      rsi_period: 14
+      
+  breakout:
+    enabled: true
+    weight: 0.15
+    params:
+      lookback_period: 20
+      volume_threshold: 1.5
+      
+  trend_following:
+    enabled: true
+    weight: 0.20
+    params:
+      ema_fast: 9
+      ema_slow: 21
+      atr_period: 14
+      
+  ml_prediction:
+    enabled: true
+    weight: 0.20
+    params:
+      model_type: ensemble
+      ensemble_size: 5
+      confidence_threshold: 0.65
+
+# AI/ML Configuration
+ml_config:
+  # Model Settings
+  model:
+    ensemble_size: 5
+    retrain_frequency: 86400  # Daily retraining
+    min_samples: 1000
+    
+  # Feature Engineering
+  features:
+    technical_indicators:
+      - RSI
+      - MACD
+      - Bollinger_Bands
+      - ATR
+      - ADX
+      - Stochastic
+      - CCI
+      - Williams_R
+      - OBV
+      - MFI
+    
+    price_features:
+      - returns
+      - volatility
+      - momentum
+      - trend_strength
+      
+    time_features:
+      - hour_of_day
+      - day_of_week
+      - session
+      - is_market_open
+      
+  # Training Parameters
+  training:
+    lookback_period: 100
+    prediction_horizon: 5
+    train_test_split: 0.8
+    validation_split: 0.1
+
+# News and Sentiment Analysis (EA Integration)
+news_analysis:
+  enabled: true
+  sources:
+    - forex_factory
+    - investing_com
+    - reuters
+    - bloomberg
+    
+  # High Impact Events
+  event_filters:
+    minimum_impact: medium  # low, medium, high
+    currencies:
+      - USD
+      - EUR
+      - GBP
+      - JPY
+      - AUD
+      - NZD
+      - CAD
+      - CHF
+      
+  # Trading During News
+  news_trading:
+    pause_before_event_minutes: 15
+    pause_after_event_minutes: 5
+    high_impact_only: true
+
+# Gemini AI Integration
+gemini_integration:
+  enabled: true
+  model: gemini-pro
+  api_key: "${GEMINI_API_KEY}"
+  
+  # Schedule Analysis
+  schedule_analysis:
+    frequency: hourly
+    tasks:
+      - market_sentiment
+      - news_summarization
+      - trading_recommendations
+      
+  # Trading Assistant
+  trading_assistant:
+    enabled: true
+    max_tokens: 4096
+    temperature: 0.3
+    
+  # Gemini 3 Features (when available)
+  gemini3:
+    enabled: false  # Enable when Gemini 3 is released
+    enhanced_reasoning: true
+    multi_modal: true
+
+# Observability
+observability:
+  metrics:
+    enabled: true
+    port: 9090
+    path: /metrics
+    
+  logging:
+    level: INFO
+    format: json
+    file: logs/trading.log
+    rotation: daily
+    
+  alerts:
+    channels:
+      - github_issue
+      - webhook
+    thresholds:
+      loss_alert: 0.03
+      drawdown_alert: 0.10
+      error_rate: 0.01
+
+# Broker Configuration
+broker:
+  primary:
+    type: metatrader5
+    server: "${MT5_SERVER}"
+    login: "${MT5_LOGIN}"
+    password: "${MT5_PASSWORD}"
+    
+  backup:
+    type: alpaca
+    api_key: "${ALPACA_API_KEY}"
+    secret_key: "${ALPACA_SECRET_KEY}"
+    base_url: https://paper-api.alpaca.markets
+    
+  crypto:
+    type: binance
+    api_key: "${BINANCE_API_KEY}"
+    secret_key: "${BINANCE_SECRET_KEY}"
+    testnet: false
