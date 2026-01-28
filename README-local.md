@@ -6,6 +6,10 @@ This repository tracks the organized desktop workspace for A6-9V, including proj
 - `A6-9V Projects/` — Main development projects
 - `A6-9V Tools/` — Development tools and utilities
 - `A6-9V Trading/` — Trading-related projects (includes GenX_FX)
+- `Projects/` — Git submodules for external projects
+  - `memos/` — Privacy-first note-taking application (from usememos/memos)
+  - `my-drive-projects/` — A6-9V drive projects and automation systems
+  - `ProductionApp/` — Production application
 - `docs/` — Documentation index and guides
 - `.github/` — Repository policies and ownership
 

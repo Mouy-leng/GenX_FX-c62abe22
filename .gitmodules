@@ -4,3 +4,9 @@
 [submodule "Projects/ProductionApp"]
 	path = Projects/ProductionApp
 	url = https://github.com/Mouy-leng/ProductionApp.git
+[submodule "Projects/memos"]
+	path = Projects/memos
+	url = https://github.com/usememos/memos.git
+[submodule "Projects/my-drive-projects"]
+	path = Projects/my-drive-projects
+	url = https://github.com/A6-9V/my-drive-projects.git
