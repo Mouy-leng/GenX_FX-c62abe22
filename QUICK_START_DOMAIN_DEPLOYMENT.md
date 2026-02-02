@@ -23,18 +23,18 @@ Before you begin, make sure you have:
 ```
 Type: A Record
 Host: @
-Value: YOUR_SERVER_IP
+Value: 203.147.134.218
 
 Type: A Record  
 Host: www
-Value: YOUR_SERVER_IP
+Value: 203.147.134.218
 ```
 
 4. Save and wait for DNS propagation (1-48 hours)
 
 **Verify DNS:**
 ```bash
-nslookup your-domain.com
+nslookup lengkundee01.org
 ```
 
 ### Step 2: Server Setup (10 minutes)
@@ -67,7 +67,7 @@ sudo ufw enable
 # Create directory and clone
 sudo mkdir -p /var/www/genx-fx
 cd /var/www/genx-fx
-sudo git clone https://github.com/Mouy-leng/GenX_FX.git .
+sudo git clone https://github.com/Mouy-leng/GenX_FX-c62abe22.git .
 sudo chown -R $USER:$USER /var/www/genx-fx
 
 # Configure environment
@@ -81,9 +81,9 @@ nano .env
 **Update these values in .env:**
 ```bash
 NODE_ENV=production
-DOMAIN=your-domain.com
-APP_URL=https://your-domain.com
-CORS_ORIGIN=https://your-domain.com
+DOMAIN=lengkundee01.org
+APP_URL=https://lengkundee01.org
+CORS_ORIGIN=https://lengkundee01.org
 
 # Generate a strong JWT secret
 JWT_SECRET=YOUR_STRONG_SECRET_HERE
@@ -102,8 +102,8 @@ sudo systemctl stop nginx
 
 # Get SSL certificate (replace with your domain and email)
 sudo certbot certonly --standalone \
-  -d your-domain.com \
-  -d www.your-domain.com \
+  -d lengkundee01.org \
+  -d www.lengkundee01.org \
   --email your-email@example.com \
   --agree-tos \
   --non-interactive
@@ -124,21 +124,21 @@ sudo ./deploy.sh
 sudo nano /etc/nginx/sites-available/genx-fx
 ```
 
-**Paste this nginx configuration** (replace `your-domain.com` with your actual domain):
+**Paste this nginx configuration** (replace `lengkundee01.org` with your actual domain):
 
 ```nginx
 server {
     listen 80;
-    server_name your-domain.com www.your-domain.com;
+    server_name lengkundee01.org www.lengkundee01.org;
     return 301 https://$server_name$request_uri;
 }
 
 server {
     listen 443 ssl http2;
-    server_name your-domain.com www.your-domain.com;
+    server_name lengkundee01.org www.lengkundee01.org;
 
-    ssl_certificate /etc/letsencrypt/live/your-domain.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/your-domain.com/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/lengkundee01.org/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/lengkundee01.org/privkey.pem;
 
     location / {
         proxy_pass http://localhost:3000;
@@ -166,18 +166,18 @@ Test your deployment:
 
 ```bash
 # Check health endpoint
-curl https://your-domain.com/health
+curl https://lengkundee01.org/health
 
 # Check SSL
-curl -I https://your-domain.com
+curl -I https://lengkundee01.org
 
 # Check application
-curl https://your-domain.com/
+curl https://lengkundee01.org/
 ```
 
 Visit in browser:
-- https://your-domain.com
-- https://your-domain.com/health
+- https://lengkundee01.org
+- https://lengkundee01.org/health
 
 ## 🎉 Success!
 
@@ -198,8 +198,8 @@ sudo ./deploy.sh
 ### DNS Not Resolving
 ```bash
 # Check DNS propagation
-nslookup your-domain.com
-dig your-domain.com
+nslookup lengkundee01.org
+dig lengkundee01.org
 
 # Wait and try again (can take up to 48 hours)
 ```
@@ -210,7 +210,7 @@ dig your-domain.com
 sudo netstat -tulpn | grep :80
 
 # Try with nginx plugin instead
-sudo certbot --nginx -d your-domain.com -d www.your-domain.com
+sudo certbot --nginx -d lengkundee01.org -d www.lengkundee01.org
 ```
 
 ### Application Not Starting
@@ -268,7 +268,7 @@ After deployment, ensure:
 - **Detailed Guide:** [DOMAIN_DEPLOYMENT_GUIDE.md](DOMAIN_DEPLOYMENT_GUIDE.md)
 - **DNS Help:** [DNS_CONFIGURATION_GUIDE.md](DNS_CONFIGURATION_GUIDE.md)
 - **Monitoring:** [MONITORING_GUIDE.md](MONITORING_GUIDE.md)
-- **Issues:** https://github.com/Mouy-leng/GenX_FX/issues
+- **Issues:** https://github.com/Mouy-leng/GenX_FX-c62abe22/issues
 
 ## 🎯 Common Commands Reference
 

@@ -41,8 +41,8 @@
 
 #### A Records (IPv4)
 ```
-@ (root)          A    [VPS_IP_ADDRESS]
-www               A    [VPS_IP_ADDRESS]
+@ (root)          A    203.147.134.218
+www               A    203.147.134.218
 ```
 
 #### CNAME Records

@@ -46,8 +46,8 @@ Remove any existing A records and CNAME records, then add the following:
 
 | Type | Host | Value | TTL |
 |------|------|-------|-----|
-| A Record | @ | YOUR_SERVER_IP | Automatic |
-| A Record | www | YOUR_SERVER_IP | Automatic |
+| A Record | @ | 203.147.134.218 | Automatic |
+| A Record | www | 203.147.134.218 | Automatic |
 
 **Example:**
 ```
@@ -68,11 +68,11 @@ Add these records if you want subdomains for API or other services:
 
 | Type | Host | Value | TTL |
 |------|------|-------|-----|
-| CNAME Record | api | your-domain.com | Automatic |
-| CNAME Record | app | your-domain.com | Automatic |
-| CNAME Record | admin | your-domain.com | Automatic |
+| CNAME Record | api | lengkundee01.org | Automatic |
+| CNAME Record | app | lengkundee01.org | Automatic |
+| CNAME Record | admin | lengkundee01.org | Automatic |
 
-**Note:** Replace `your-domain.com` with your actual domain name.
+**Note:** Replace `lengkundee01.org` with your actual domain name.
 
 ### Step 5: Configure Email (Optional)
 
@@ -80,7 +80,7 @@ If you want to use email with your domain:
 
 | Type | Host | Value | Priority | TTL |
 |------|------|-------|----------|-----|
-| MX Record | @ | mail.your-domain.com | 10 | Automatic |
+| MX Record | @ | mail.lengkundee01.org | 10 | Automatic |
 
 ### Step 6: Add TXT Records for Security (Recommended)
 
@@ -99,7 +99,7 @@ Follow your email provider's instructions
 ```
 Type: TXT Record
 Host: _dmarc
-Value: v=DMARC1; p=quarantine; rua=mailto:admin@your-domain.com
+Value: v=DMARC1; p=quarantine; rua=mailto:admin@lengkundee01.org
 TTL: Automatic
 ```
 
@@ -128,16 +128,16 @@ Use these tools to verify DNS propagation:
 3. **Command Line Tools**:
    ```bash
    # Check A record
-   nslookup your-domain.com
+   nslookup lengkundee01.org
    
    # Check with specific DNS server (Google)
-   nslookup your-domain.com 8.8.8.8
+   nslookup lengkundee01.org 8.8.8.8
    
    # Detailed DNS query
-   dig your-domain.com
+   dig lengkundee01.org
    
    # Check all records
-   dig your-domain.com ANY
+   dig lengkundee01.org ANY
    ```
 
 ## ✅ Verification Steps
@@ -146,17 +146,17 @@ Use these tools to verify DNS propagation:
 
 ```bash
 # From your local machine
-dig your-domain.com
+dig lengkundee01.org
 
 # Expected output should show your server IP
-# your-domain.com.     300     IN      A       192.168.1.100
+# lengkundee01.org.     300     IN      A       192.168.1.100
 ```
 
 ### 2. Test HTTP Connection
 
 ```bash
 # Test basic connectivity
-curl -I http://your-domain.com
+curl -I http://lengkundee01.org
 
 # Should return HTTP response headers
 ```
@@ -165,7 +165,7 @@ curl -I http://your-domain.com
 
 ```bash
 # Test www subdomain
-dig www.your-domain.com
+dig www.lengkundee01.org
 
 # Should also point to your server IP
 ```
@@ -286,7 +286,7 @@ Once DNS is configured and propagated:
 2. ✅ Update .env file with your domain
 3. ✅ Deploy application: `sudo ./deploy.sh`
 4. ✅ Configure Nginx with your domain
-5. ✅ Test HTTPS: `https://your-domain.com`
+5. ✅ Test HTTPS: `https://lengkundee01.org`
 
 ## 📚 Additional Resources
 

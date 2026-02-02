@@ -118,7 +118,7 @@ Use Plane Pages for:
 
 1. In Plane, go to **Project Settings** → **Integrations**
 2. Select **GitHub**
-3. Authorize Plane to access `Mouy-leng/GenX_FX`
+3. Authorize Plane to access `Mouy-leng/GenX_FX-c62abe22`
 4. Enable sync options:
    - ✓ Import existing issues
    - ✓ Two-way sync

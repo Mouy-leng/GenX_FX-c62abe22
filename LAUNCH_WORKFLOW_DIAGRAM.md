@@ -10,7 +10,7 @@
 │ STEP 1: Clone & Checkout Branch                                         │
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
-│  git clone https://github.com/Mouy-leng/GenX_FX.git                    │
+│  git clone https://github.com/Mouy-leng/GenX_FX-c62abe22.git                    │
 │  cd GenX_FX                                                             │
 │  git checkout copilot/launch-repository-clone                           │
 │                                                                          │

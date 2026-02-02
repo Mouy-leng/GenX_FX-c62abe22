@@ -5,7 +5,7 @@
 This document summarizes all changes made to organize and prepare the GenX_FX repository for custom domain deployment from Namecheap.
 
 **Date Completed:** January 6, 2026  
-**Repository:** https://github.com/Mouy-leng/GenX_FX
+**Repository:** https://github.com/Mouy-leng/GenX_FX-c62abe22
 
 ## ✅ Completed Tasks
 

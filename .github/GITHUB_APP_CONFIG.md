@@ -17,14 +17,14 @@ This document outlines the GitHub App configuration for the NUNA device (💻) m
 | URL Type | URL |
 |----------|-----|
 | **Homepage URL** | `https://github.com/A6-9V` |
-| **Callback URL** | `https://your-domain.com/auth/github/callback` |
-| **Webhook URL** | `https://your-domain.com/webhooks/github` |
-| **Setup URL** | `https://your-domain.com/setup/github-app` |
+| **Callback URL** | `https://lengkundee01.org/auth/github/callback` |
+| **Webhook URL** | `https://lengkundee01.org/webhooks/github` |
+| **Setup URL** | `https://lengkundee01.org/setup/github-app` |
 
 ### Webhook Configuration
 ```yaml
 webhook:
-  url: https://your-domain.com/webhooks/github
+  url: https://lengkundee01.org/webhooks/github
   secret: ${GITHUB_WEBHOOK_SECRET}  # Store in secrets manager
   content_type: application/json
   ssl_verification: enabled
@@ -46,7 +46,7 @@ webhook:
 oauth:
   client_id: ${GITHUB_CLIENT_ID}
   client_secret: ${GITHUB_CLIENT_SECRET}
-  redirect_uri: https://your-domain.com/auth/github/callback
+  redirect_uri: https://lengkundee01.org/auth/github/callback
   scopes:
     - user:email
     - read:org

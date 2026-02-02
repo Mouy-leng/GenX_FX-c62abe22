@@ -46,7 +46,7 @@ ssh-copy-id user@your-server-ip
 
 #### `DOMAIN`
 **Description:** Your primary domain name  
-**Value:** `your-domain.com` (without https:// or www)
+**Value:** `lengkundee01.org` (without https:// or www)
 
 ### 3. Application Secrets
 
@@ -145,7 +145,7 @@ ssh -i ~/.ssh/github-actions-genx-fx user@your-server-ip
 
 ### Step 4: Add Secrets to GitHub
 
-1. Go to https://github.com/Mouy-leng/GenX_FX/settings/secrets/actions
+1. Go to https://github.com/Mouy-leng/GenX_FX-c62abe22/settings/secrets/actions
 2. Click **New repository secret** for each secret:
 
 ```
@@ -159,7 +159,7 @@ Name: SERVER_USER
 Value: your-username
 
 Name: DOMAIN
-Value: your-domain.com
+Value: lengkundee01.org
 
 Name: JWT_SECRET
 Value: [Generated random string]
@@ -267,7 +267,7 @@ jobs:
 **Solutions:**
 1. Verify DNS records are configured
 2. Wait for DNS propagation (up to 48 hours)
-3. Test with `nslookup your-domain.com`
+3. Test with `nslookup lengkundee01.org`
 4. Ensure DOMAIN secret doesn't include `https://` or `www`
 
 ### Deployment Fails

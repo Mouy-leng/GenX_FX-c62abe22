@@ -228,8 +228,8 @@ lengkundee01.org
 - **Email**: support@namecheap.com
 
 ### Repository Support
-- **GitHub**: https://github.com/Mouy-leng/GenX_FX
-- **Issues**: https://github.com/Mouy-leng/GenX_FX/issues
+- **GitHub**: https://github.com/Mouy-leng/GenX_FX-c62abe22
+- **Issues**: https://github.com/Mouy-leng/GenX_FX-c62abe22/issues
 
 ---
 
