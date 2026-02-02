@@ -1,0 +1,21 @@
+# Trading Bridge Requirements
+# Python 3.11+
+
+# Core dependencies
+asyncio-mqtt==0.16.1
+aiohttp==3.9.1
+websockets==12.0
+
+# API and networking
+requests==2.31.0
+urllib3==2.1.0
+
+# Configuration
+python-dotenv==1.0.0
+
+# Logging and monitoring
+colorama==0.4.6
+
+# Date/time utilities
+python-dateutil==2.8.2
+pytz==2023.3
