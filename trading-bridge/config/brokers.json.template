@@ -1,7 +1,6 @@
-# Broker Configuration Template
-# Copy this file to brokers.json and fill in your actual credentials
-
 {
+  "_comment": "Broker Configuration Template - Copy this file to brokers.json and fill in your actual credentials",
+  "_instructions": "Get Exness credentials from: https://my.exness.com → Settings → API",
   "EXNESS": {
     "account_id": "YOUR_ACCOUNT_ID",
     "api_key": "YOUR_API_KEY",
