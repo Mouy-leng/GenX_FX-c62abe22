@@ -66,7 +66,7 @@ Create `/var/www/genx-fx/monitor.sh`:
 ```bash
 #!/bin/bash
 
-DOMAIN="your-domain.com"
+DOMAIN="lengkundee01.org"
 EMAIL="your-email@example.com"
 LOG_FILE="/var/log/genx-fx-monitor.log"
 
@@ -177,7 +177,7 @@ crontab -e
 - **URL:** https://uptimerobot.com
 - **Setup:**
   1. Create account
-  2. Add monitor: `https://your-domain.com/health`
+  2. Add monitor: `https://lengkundee01.org/health`
   3. Set check interval: 5 minutes
   4. Configure alerts: Email, SMS, Slack
 
@@ -286,7 +286,7 @@ Monitor these key metrics:
 **Response Time:**
 ```bash
 # Test API response time
-curl -w "@curl-format.txt" -o /dev/null -s https://your-domain.com/health
+curl -w "@curl-format.txt" -o /dev/null -s https://lengkundee01.org/health
 
 # curl-format.txt content:
 time_namelookup:  %{time_namelookup}\n

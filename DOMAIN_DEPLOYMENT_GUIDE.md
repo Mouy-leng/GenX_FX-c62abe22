@@ -103,7 +103,7 @@ sudo mkdir -p /var/www/genx-fx
 cd /var/www/genx-fx
 
 # Clone repository
-sudo git clone https://github.com/Mouy-leng/GenX_FX.git .
+sudo git clone https://github.com/Mouy-leng/GenX_FX-c62abe22.git .
 
 # Set permissions
 sudo chown -R $USER:$USER /var/www/genx-fx
@@ -612,4 +612,4 @@ Your GenX_FX application should now be accessible at:
 **Last Updated:** January 2026  
 **Version:** 1.0.0
 
-For support, create an issue at: https://github.com/Mouy-leng/GenX_FX/issues
+For support, create an issue at: https://github.com/Mouy-leng/GenX_FX-c62abe22/issues

@@ -87,7 +87,7 @@ The changes are stored in `.git/config` which is not tracked in the repository.
 ### Configuration Content
 ```
 [remote "origin"]
-    url = https://github.com/Mouy-leng/GenX_FX
+    url = https://github.com/Mouy-leng/GenX_FX-c62abe22
     fetch = +refs/heads/*:refs/remotes/origin/*
 ```
 

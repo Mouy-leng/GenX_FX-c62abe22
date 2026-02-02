@@ -12,7 +12,7 @@ Welcome to the GenX_FX trading system repository! This index provides quick acce
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/Mouy-leng/GenX_FX.git
+git clone https://github.com/Mouy-leng/GenX_FX-c62abe22.git
 cd GenX_FX
 
 # 2. Checkout the launch branch
@@ -237,7 +237,7 @@ Day 5+: Daily Operations
 
 ### Development & Collaboration
 - **Code With Me:** https://code-with-me.global.jetbrains.com/ZhaX8frcoZS0qveUMv8vAg
-- **GitHub Repository:** https://github.com/Mouy-leng/GenX_FX
+- **GitHub Repository:** https://github.com/Mouy-leng/GenX_FX-c62abe22
 
 ### Trading Resources
 - **TradingView:** https://www.tradingview.com
@@ -330,7 +330,7 @@ After launching the system, verify these items:
 **Version:** Enhanced v2.0
 
 For issues or improvements, refer to:
-- Repository Issues: https://github.com/Mouy-leng/GenX_FX/issues
+- Repository Issues: https://github.com/Mouy-leng/GenX_FX-c62abe22/issues
 - Documentation: [docs/](docs/) directory
 - System README: [A6-9V_Master_System_README.md](A6-9V_Master_System_README.md)
 

@@ -4,7 +4,7 @@
 
 ## 🌐 Live Deployment
 
-**Production URL:** `https://your-domain.com` (Configure with your Namecheap domain)
+**Production URL:** `https://lengkundee01.org`
 
 For detailed domain deployment instructions, see [DOMAIN_DEPLOYMENT_GUIDE.md](DOMAIN_DEPLOYMENT_GUIDE.md)
 
@@ -33,8 +33,8 @@ GenX_FX is a comprehensive trading system combining:
 
 ```bash
 # Clone the repository
-git clone https://github.com/Mouy-leng/GenX_FX.git
-cd GenX_FX
+git clone https://github.com/Mouy-leng/GenX_FX-c62abe22.git
+cd GenX_FX-c62abe22
 
 # Run the launcher (Unix/Linux/Mac)
 ./launch_cloned_branch.sh
@@ -178,15 +178,15 @@ This will start:
 
 1. **Configure DNS records** in your Namecheap dashboard:
    ```
-   A Record:    @        -> Your VPS IP
-   A Record:    www      -> Your VPS IP
-   CNAME:       api      -> your-domain.com
+   A Record:    @        -> 203.147.134.218
+   A Record:    www      -> 203.147.134.218
+   CNAME:       api      -> lengkundee01.org
    ```
 
 2. **Update environment variables** in `.env`:
    ```bash
-   DOMAIN=your-domain.com
-   CORS_ORIGIN=https://your-domain.com
+   DOMAIN=lengkundee01.org
+   CORS_ORIGIN=https://lengkundee01.org
    ```
 
 3. **Configure SSL** certificates (see [DOMAIN_DEPLOYMENT_GUIDE.md](DOMAIN_DEPLOYMENT_GUIDE.md))
@@ -255,14 +255,15 @@ Private workspace. See [OWNERSHIP.md](OWNERSHIP.md) for repository ownership and
 
 ## 🆘 Support
 
-- **Issues:** https://github.com/Mouy-leng/GenX_FX/issues
+- **Issues:** https://github.com/Mouy-leng/GenX_FX-c62abe22/issues
 - **Documentation:** [DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md)
 - **Trading Guide:** [REPOSITORY_LAUNCH_GUIDE.md](REPOSITORY_LAUNCH_GUIDE.md)
 
 ## 📞 Contact
 
 **Organization:** A6-9V  
-**Repository:** https://github.com/Mouy-leng/GenX_FX  
+**Repository:** https://github.com/Mouy-leng/GenX_FX-c62abe22  
+**Domain:** https://lengkundee01.org  
 **Last Updated:** January 2026
 
 ---

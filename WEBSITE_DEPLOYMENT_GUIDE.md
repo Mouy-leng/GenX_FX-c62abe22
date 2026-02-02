@@ -100,7 +100,7 @@ sudo mkdir -p /opt/genx-deploy
 sudo chown $USER:$USER /opt/genx-deploy
 
 # Set repository URL (update if needed)
-REPO_URL="https://github.com/Mouy-leng/GenX_FX.git"
+REPO_URL="https://github.com/Mouy-leng/GenX_FX-c62abe22.git"
 git clone "$REPO_URL" /opt/genx-deploy/GenX_FX
 cd /opt/genx-deploy/GenX_FX
 

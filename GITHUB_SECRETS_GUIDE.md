@@ -145,7 +145,7 @@ ssh -i ~/.ssh/github-actions-genx-fx user@your-server-ip
 
 ### Step 4: Add Secrets to GitHub
 
-1. Go to https://github.com/Mouy-leng/GenX_FX/settings/secrets/actions
+1. Go to https://github.com/Mouy-leng/GenX_FX-c62abe22/settings/secrets/actions
 2. Click **New repository secret** for each secret:
 
 ```

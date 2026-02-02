@@ -50,7 +50,7 @@ D:\Projects\GenX_FX
 ### Git Remote (Canonical Code Source)
 
 ```
-https://github.com/Mouy-leng/GenX_FX
+https://github.com/Mouy-leng/GenX_FX-c62abe22
 ```
 
 ### Cloud Mirrors (for Backup, Sharing, Redundancy)
@@ -127,7 +127,7 @@ You have two separate concerns:
 **Put project in a public GitHub repository:**
 
 - **Local:** `D:\Projects\GenX_FX`
-- **Remote:** `https://github.com/Mouy-leng/GenX_FX`
+- **Remote:** `https://github.com/Mouy-leng/GenX_FX-c62abe22`
 
 Google will index:
 - The repository page
@@ -176,7 +176,7 @@ To avoid conflicts and mess:
 ### Setup for the GenX_FX Project
 
 1. **Canonical Repository:**
-   - GitHub: `https://github.com/Mouy-leng/GenX_FX`
+   - GitHub: `https://github.com/Mouy-leng/GenX_FX-c62abe22`
 
 2. **Local Workspace:**
    - Windows 11 dev folder (example): `D:\Projects\GenX_FX` (replace with your own path)
@@ -435,7 +435,7 @@ rclone sync source dest --bwlimit=1M
 - And 40+ more
 
 ### For GenX_FX Project
-- **Repository:** https://github.com/Mouy-leng/GenX_FX
+- **Repository:** https://github.com/Mouy-leng/GenX_FX-c62abe22
 - **Documentation Index:** [DOCUMENTATION_INDEX.md](../DOCUMENTATION_INDEX.md)
 - **Main README:** [README.md](README.md)
 
