@@ -52,7 +52,7 @@ GenX_FX/
 
 ```bash
 # Clone the repository
-git clone https://github.com/Mouy-leng/GenX_FX-c62abe22.git
+git clone https://github.com/Mouy-leng/GenX_FX-c62abe22-c62abe22.git
 cd GenX_FX
 
 # Checkout the specific branch
@@ -427,7 +427,7 @@ Based on the Exness MT5 trading platform screen, your layout should include:
 **Last Updated:** 2026-01-04  
 **Organization:** A6-9V  
 **Branch:** copilot/launch-repository-clone  
-**Repository:** Mouy-leng/GenX_FX
+**Repository:** Mouy-leng/GenX_FX-c62abe22
 
 ---
 
@@ -439,7 +439,7 @@ Based on the Exness MT5 trading platform screen, your layout should include:
 
 ```bash
 # 1. Clone and checkout branch
-git clone https://github.com/Mouy-leng/GenX_FX-c62abe22.git
+git clone https://github.com/Mouy-leng/GenX_FX-c62abe22-c62abe22.git
 cd GenX_FX
 git checkout copilot/launch-repository-clone
 

@@ -23,11 +23,11 @@ Before you begin, make sure you have:
 ```
 Type: A Record
 Host: @
-Value: YOUR_SERVER_IP
+Value: 203.147.134.218
 
 Type: A Record  
 Host: www
-Value: YOUR_SERVER_IP
+Value: 203.147.134.218
 ```
 
 4. Save and wait for DNS propagation (1-48 hours)

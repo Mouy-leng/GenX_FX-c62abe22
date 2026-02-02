@@ -28,17 +28,17 @@ Navigate to **Advanced DNS** and add the following records:
 
 | Type | Host | Value | TTL |
 |------|------|-------|-----|
-| A Record | @ | `YOUR_VPS_IP` | Automatic |
-| A Record | www | `YOUR_VPS_IP` | Automatic |
-| CNAME Record | api | `your-domain.com` | Automatic |
-| CNAME Record | app | `your-domain.com` | Automatic |
+| A Record | @ | `203.147.134.218` | Automatic |
+| A Record | www | `203.147.134.218` | Automatic |
+| CNAME Record | api | `lengkundee01.org` | Automatic |
+| CNAME Record | app | `lengkundee01.org` | Automatic |
 
 **Example:**
 ```
 A Record:    @        ->  192.168.1.100
 A Record:    www      ->  192.168.1.100
-CNAME:       api      ->  your-domain.com
-CNAME:       app      ->  your-domain.com
+CNAME:       api      ->  lengkundee01.org
+CNAME:       app      ->  lengkundee01.org
 ```
 
 ### 1.3 Wait for DNS Propagation
@@ -53,7 +53,7 @@ DNS changes can take 1-48 hours to propagate. You can check propagation status a
 
 ```bash
 # SSH into your server
-ssh root@YOUR_VPS_IP
+ssh root@203.147.134.218
 
 # Update system packages
 sudo apt update && sudo apt upgrade -y
@@ -130,9 +130,9 @@ NODE_ENV=production
 PORT=3000
 
 # Domain Configuration
-DOMAIN=your-domain.com
-CORS_ORIGIN=https://your-domain.com
-API_URL=https://api.your-domain.com
+DOMAIN=lengkundee01.org
+CORS_ORIGIN=https://lengkundee01.org
+API_URL=https://api.lengkundee01.org
 
 # Database Configuration
 MONGODB_URI=mongodb://mongo:27017/productionapp
@@ -164,7 +164,7 @@ node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
 sudo systemctl stop nginx
 
 # Obtain certificate
-sudo certbot certonly --standalone -d your-domain.com -d www.your-domain.com
+sudo certbot certonly --standalone -d lengkundee01.org -d www.lengkundee01.org
 
 # Start Nginx
 sudo systemctl start nginx
@@ -196,7 +196,7 @@ sudo nano /etc/nginx/sites-available/genx-fx
 server {
     listen 80;
     listen [::]:80;
-    server_name your-domain.com www.your-domain.com;
+    server_name lengkundee01.org www.lengkundee01.org;
     
     # Redirect all HTTP to HTTPS
     return 301 https://$server_name$request_uri;
@@ -206,11 +206,11 @@ server {
 server {
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
-    server_name your-domain.com www.your-domain.com;
+    server_name lengkundee01.org www.lengkundee01.org;
 
     # SSL Configuration
-    ssl_certificate /etc/letsencrypt/live/your-domain.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/your-domain.com/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/lengkundee01.org/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/lengkundee01.org/privkey.pem;
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers HIGH:!aNULL:!MD5;
     ssl_prefer_server_ciphers on;
@@ -259,7 +259,7 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
         
         # CORS headers (if needed)
-        add_header Access-Control-Allow-Origin https://your-domain.com always;
+        add_header Access-Control-Allow-Origin https://lengkundee01.org always;
         add_header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS" always;
         add_header Access-Control-Allow-Headers "Authorization, Content-Type" always;
     }
@@ -302,12 +302,12 @@ Update the app service environment:
 environment:
   - NODE_ENV=production
   - PORT=3000
-  - DOMAIN=your-domain.com
+  - DOMAIN=lengkundee01.org
   - MONGODB_URI=mongodb://mongo:27017/productionapp
   - JWT_SECRET=${JWT_SECRET}
   - JWT_EXPIRE=7d
   - BCRYPT_SALT_ROUNDS=12
-  - CORS_ORIGIN=https://your-domain.com
+  - CORS_ORIGIN=https://lengkundee01.org
 ```
 
 ### 6.2 Start Services
@@ -329,20 +329,20 @@ docker-compose logs -f app
 
 ```bash
 # Test HTTP redirect
-curl -I http://your-domain.com
+curl -I http://lengkundee01.org
 
 # Test HTTPS
-curl https://your-domain.com/health
+curl https://lengkundee01.org/health
 
 # Test API
-curl https://your-domain.com/api/health
+curl https://lengkundee01.org/api/health
 ```
 
 ### 7.2 Verify SSL Certificate
 
 ```bash
 # Check SSL certificate
-openssl s_client -connect your-domain.com:443 -servername your-domain.com
+openssl s_client -connect lengkundee01.org:443 -servername lengkundee01.org
 ```
 
 ### 7.3 Check Application Logs
@@ -437,7 +437,7 @@ nano /var/www/genx-fx/monitor.sh
 ```bash
 #!/bin/bash
 
-DOMAIN="your-domain.com"
+DOMAIN="lengkundee01.org"
 EMAIL="your-email@example.com"
 
 # Check if site is up
@@ -535,8 +535,8 @@ Before going live, verify:
 
 ```bash
 # Check DNS propagation
-nslookup your-domain.com
-dig your-domain.com
+nslookup lengkundee01.org
+dig lengkundee01.org
 
 # Flush local DNS cache
 sudo systemd-resolve --flush-caches
@@ -603,9 +603,9 @@ sudo netstat -tulpn | grep :3000
 ## 🎉 Deployment Complete!
 
 Your GenX_FX application should now be accessible at:
-- **Main Site:** https://your-domain.com
-- **API:** https://your-domain.com/api
-- **Health Check:** https://your-domain.com/health
+- **Main Site:** https://lengkundee01.org
+- **API:** https://lengkundee01.org/api
+- **Health Check:** https://lengkundee01.org/health
 
 ---
 

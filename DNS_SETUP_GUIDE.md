@@ -39,13 +39,13 @@ Click "Add New Record" and configure:
 #### Root Domain (@)
 - **Type**: A Record
 - **Host**: @
-- **Value**: [YOUR_VPS_IP_ADDRESS] (See VPS_CONFIGURATION.md or VPS dashboard)
+- **Value**: [203.147.134.218] (See VPS_CONFIGURATION.md or VPS dashboard)
 - **TTL**: Automatic
 
 #### WWW Subdomain
 - **Type**: A Record
 - **Host**: www
-- **Value**: [YOUR_VPS_IP_ADDRESS] (Same as root domain)
+- **Value**: [203.147.134.218] (Same as root domain)
 - **TTL**: Automatic
 
 > **Note**: To find your VPS IP address, check [VPS_CONFIGURATION.md](VPS_CONFIGURATION.md) or login to your VPS provider dashboard.
@@ -68,25 +68,25 @@ Add the following A records for subdomains:
 #### API Subdomain
 - **Type**: A Record
 - **Host**: api
-- **Value**: [YOUR_VPS_IP_ADDRESS]
+- **Value**: [203.147.134.218]
 - **TTL**: Automatic
 
 #### Trading Dashboard
 - **Type**: A Record
 - **Host**: trading
-- **Value**: [YOUR_VPS_IP_ADDRESS]
+- **Value**: [203.147.134.218]
 - **TTL**: Automatic
 
 #### Documentation
 - **Type**: A Record
 - **Host**: docs
-- **Value**: [YOUR_VPS_IP_ADDRESS]
+- **Value**: [203.147.134.218]
 - **TTL**: Automatic
 
 #### Status Page
 - **Type**: A Record
 - **Host**: status
-- **Value**: [YOUR_VPS_IP_ADDRESS]
+- **Value**: [203.147.134.218]
 - **TTL**: Automatic
 
 ### Complete Subdomain Configuration:
@@ -116,7 +116,7 @@ If you plan to use email with this domain:
 #### Mail Server A Record
 - **Type**: A Record
 - **Host**: mail
-- **Value**: [YOUR_VPS_IP_ADDRESS]
+- **Value**: [203.147.134.218]
 - **TTL**: Automatic
 
 ---
@@ -167,12 +167,12 @@ After configuring DNS records, check propagation:
 
 ### Expected Results
 ```
-lengkundee01.org          → YOUR_VPS_IP
-www.lengkundee01.org      → YOUR_VPS_IP
-api.lengkundee01.org      → YOUR_VPS_IP
-trading.lengkundee01.org  → YOUR_VPS_IP
-docs.lengkundee01.org     → YOUR_VPS_IP
-status.lengkundee01.org   → YOUR_VPS_IP
+lengkundee01.org          → 203.147.134.218
+www.lengkundee01.org      → 203.147.134.218
+api.lengkundee01.org      → 203.147.134.218
+trading.lengkundee01.org  → 203.147.134.218
+docs.lengkundee01.org     → 203.147.134.218
+status.lengkundee01.org   → 203.147.134.218
 ```
 
 ---
@@ -282,13 +282,13 @@ After completing all steps, your DNS records should look like:
 ### A Records
 ```
 Host       Type    Value               TTL
-@          A       YOUR_VPS_IP        Automatic
-www        A       YOUR_VPS_IP        Automatic
-api        A       YOUR_VPS_IP        Automatic
-trading    A       YOUR_VPS_IP        Automatic
-docs       A       YOUR_VPS_IP        Automatic
-status     A       YOUR_VPS_IP        Automatic
-mail       A       YOUR_VPS_IP        Automatic (optional)
+@          A       203.147.134.218        Automatic
+www        A       203.147.134.218        Automatic
+api        A       203.147.134.218        Automatic
+trading    A       203.147.134.218        Automatic
+docs       A       203.147.134.218        Automatic
+status     A       203.147.134.218        Automatic
+mail       A       203.147.134.218        Automatic (optional)
 ```
 
 ### MX Records (Optional)
