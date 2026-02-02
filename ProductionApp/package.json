@@ -16,15 +16,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Mouy-leng/ProductionApp.git"
+    "url": "git+https://github.com/Mouy-leng/GenX_FX-c62abe22.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Mouy-leng/ProductionApp/issues"
+    "url": "https://github.com/Mouy-leng/GenX_FX-c62abe22/issues"
   },
-  "homepage": "https://github.com/Mouy-leng/ProductionApp#readme",
+  "homepage": "https://github.com/Mouy-leng/GenX_FX-c62abe22#readme",
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "compression": "^1.8.1",
