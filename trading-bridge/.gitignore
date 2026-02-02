@@ -12,8 +12,9 @@ env/
 ENV/
 .venv
 
-# Configuration with credentials
+# Configuration with credentials (but keep template)
 config/brokers.json
+!config/brokers.json.template
 
 # IDE
 .vscode/

@@ -1,0 +1,21 @@
+# Broker Configuration Template
+# Copy this file to brokers.json and fill in your actual credentials
+
+{
+  "EXNESS": {
+    "account_id": "YOUR_ACCOUNT_ID",
+    "api_key": "YOUR_API_KEY",
+    "api_secret": "YOUR_API_SECRET",
+    "api_url": "https://api.exness.com",
+    "enabled": false,
+    "description": "Get credentials from: https://my.exness.com → Settings → API"
+  },
+  "BROKER2": {
+    "account_id": "YOUR_ACCOUNT_ID",
+    "api_key": "YOUR_API_KEY",
+    "api_secret": "YOUR_API_SECRET",
+    "api_url": "https://api.broker2.com",
+    "enabled": false,
+    "description": "Example template for additional broker"
+  }
+}
