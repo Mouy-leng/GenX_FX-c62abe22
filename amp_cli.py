@@ -472,7 +472,7 @@ def auth(
 ):
     """Manage authentication"""
     try:
-        from amp_auth import authenticate_user, check_auth, logout_user, get_user_info
+        from core.monitoring.auth import authenticate_user, check_auth, logout_user, get_user_info
         
         if logout:
             logout_user()
@@ -504,7 +504,7 @@ def schedule(
 ):
     """Manage automated job scheduling"""
     try:
-        from amp_scheduler import start_scheduler, stop_scheduler, get_scheduler_status, update_scheduler_config
+        from core.monitoring.scheduler import start_scheduler, stop_scheduler, get_scheduler_status, update_scheduler_config
         
         if start:
             console.print("🚀 [bold blue]Starting AMP Scheduler...")
@@ -544,7 +544,7 @@ def monitor(
 ):
     """Monitor system performance and status"""
     try:
-        from amp_monitor import get_system_status, generate_report, display_dashboard
+        from core.monitoring.monitor import get_system_status, generate_report, display_dashboard
         
         if dashboard:
             console.print("📊 [bold blue]Starting AMP Monitoring Dashboard...")

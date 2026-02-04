@@ -11,8 +11,8 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional
 import asyncio
 
-from amp_auth import check_auth, get_user_info
-from amp_scheduler import get_scheduler_status
+from .auth import check_auth, get_user_info
+from .scheduler import get_scheduler_status
 
 class AMPMonitor:
     def __init__(self):

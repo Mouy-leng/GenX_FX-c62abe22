@@ -13,7 +13,7 @@ import json
 import logging
 from typing import Optional, Dict, Any
 
-from amp_auth import check_auth, get_user_info
+from .auth import check_auth, get_user_info
 from amp_job_runner import AMPJobRunner
 
 # Configure logging
