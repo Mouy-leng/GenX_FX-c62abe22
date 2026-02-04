@@ -10,7 +10,7 @@
     "dev": "concurrently \"npm:client\" \"npm:server\" \"npm:python:dev\"",
     "client": "vite --host 0.0.0.0 --port 5173",
     "server": "tsx watch services/server/index.ts",
-    "python:dev": "uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload",
+    "python:dev": "poetry run uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload",
     "start": "tsx services/server/index.ts",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
