@@ -102,3 +102,11 @@ class SystemStatus(BaseModel):
     trading_enabled: bool
     last_update: datetime
     active_strategies: List[str]
+
+# Agent Schemas
+class AgentStatus(BaseModel):
+    agent_id: str = Field(..., description="The unique identifier for the agent.")
+    status: str = Field(..., description="The current status of the agent (e.g., 'running', 'idle', 'error').")
+    current_task: Optional[str] = Field(None, description="The task the agent is currently working on.")
+    last_seen: datetime = Field(..., description="The last time the agent reported its status.")
+    device_id: Optional[str] = Field(None, description="The device ID associated with this agent, if any.")
