@@ -42,7 +42,14 @@ class Settings(BaseSettings):
     
     # Security
     SECRET_KEY: str = Field(..., description="Secret key for JWT tokens")
+    ALGORITHM: str = "HS256"  # SECURITY: Explicitly set JWT algorithm
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    
+    # SECURITY: Additional security settings
+    REQUIRE_HTTPS: bool = True  # Force HTTPS in production
+    CORS_ORIGINS: list = ["http://localhost:3000", "http://localhost:8080"]  # Restrict CORS
+    MAX_LOGIN_ATTEMPTS: int = 5  # Rate limiting
+    LOCKOUT_DURATION_MINUTES: int = 15
     
     # Logging
     LOG_LEVEL: str = "INFO"
