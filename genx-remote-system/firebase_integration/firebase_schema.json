@@ -1,0 +1,52 @@
+{
+  "firestore": {
+    "collections": {
+      "sessions": {
+        "description": "Stores active user sessions, linking a GitHub user to a verified device.",
+        "documents": {
+          "{sessionId}": {
+            "fields": {
+              "userId": {
+                "type": "string",
+                "description": "The unique ID of the authenticated GitHub user."
+              },
+              "githubUsername": {
+                "type": "string",
+                "description": "The GitHub username of the user."
+              },
+              "deviceBuildNumber": {
+                "type": "string",
+                "description": "The build number of the device used for the session."
+              },
+              "deviceFingerprint": {
+                "type": "string",
+                "description": "The secure fingerprint of the device."
+              },
+              "createdAt": {
+                "type": "timestamp",
+                "description": "The timestamp when the session was created."
+              },
+              "expiresAt": {
+                "type": "timestamp",
+                "description": "The timestamp when the session is set to expire."
+              },
+              "isActive": {
+                "type": "boolean",
+                "description": "A flag to indicate if the session is currently active."
+              }
+            },
+            "example": {
+              "userId": "1234567",
+              "githubUsername": "someuser",
+              "deviceBuildNumber": "15.1.1.109SP06(OP001PF001AZ)",
+              "deviceFingerprint": "9d6c3536cd81ed1b63d684fe8f68a8e79694e8d97b0c1fe6d338813304df9c8c",
+              "createdAt": "2023-10-27T10:00:00Z",
+              "expiresAt": "2023-10-27T11:00:00Z",
+              "isActive": true
+            }
+          }
+        }
+      }
+    }
+  }
+}
