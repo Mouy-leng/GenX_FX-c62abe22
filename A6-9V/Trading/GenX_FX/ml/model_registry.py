@@ -6,7 +6,6 @@ Handles model storage, versioning, and deployment
 import asyncio
 import logging
 import json
-import pickle
 import hashlib
 from typing import Dict, List, Optional, Any, Tuple
 from datetime import datetime, timedelta
@@ -177,8 +176,7 @@ class ModelRegistry:
         try:
             scaler_path = self.storage_path / f"{scaler_id}.pkl"
             if scaler_path.exists():
-                with open(scaler_path, 'rb') as f:
-                    return pickle.load(f)
+                return joblib.load(scaler_path)
             return None
             
         except Exception as e:
@@ -190,8 +188,7 @@ class ModelRegistry:
         try:
             model_path = self.storage_path / f"{model_id}.pkl"
             
-            with open(model_path, 'wb') as f:
-                pickle.dump(model, f)
+            joblib.dump(model, model_path)
             
             self.logger.info(f"Model saved: {model_id}")
             return True
@@ -205,8 +202,7 @@ class ModelRegistry:
         try:
             scaler_path = self.storage_path / f"{scaler_id}.pkl"
             
-            with open(scaler_path, 'wb') as f:
-                pickle.dump(scaler, f)
+            joblib.dump(scaler, scaler_path)
             
             self.logger.info(f"Scaler saved: {scaler_id}")
             return True
@@ -443,10 +439,9 @@ class ModelRegistry:
         try:
             model_path.mkdir(parents=True, exist_ok=True)
             
-            # Save model
+            # Save model using joblib (safer than pickle)
             model_file = model_path / "model.pkl"
-            with open(model_file, 'wb') as f:
-                pickle.dump(model, f)
+            joblib.dump(model, model_file)
             
         except Exception as e:
             self.logger.error(f"Error saving model: {e}")
@@ -529,8 +524,7 @@ class ModelRegistry:
         try:
             model_file = model_path / "model.pkl"
             if model_file.exists():
-                with open(model_file, 'rb') as f:
-                    return pickle.load(f)
+                return joblib.load(model_file)
             return None
             
         except Exception as e:
