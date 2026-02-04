@@ -1,4 +1,4 @@
-function run() {
+function run(config) {
   console.log('Running AMP Adapter...');
   // In the future, this plugin could be used to:
   // - Interact with the AMP API

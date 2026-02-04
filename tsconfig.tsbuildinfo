@@ -1,1 +1,1 @@
-{"root":["./client/src/App.tsx","./client/src/main.tsx","./client/src/vite-env.d.ts","./client/src/components/Auth/AuthProvider.tsx","./client/src/components/Auth/LoginForm.tsx","./client/src/components/Auth/SignupForm.tsx","./client/src/firebase/auth.ts","./client/src/firebase/config.ts","./client/src/firebase/firestore.ts","./shared/schema.ts"],"version":"5.9.3"}
+{"root":["./client/src/app.tsx","./client/src/main.tsx","./shared/schema.ts"],"version":"5.8.3"}

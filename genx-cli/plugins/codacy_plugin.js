@@ -1,4 +1,4 @@
-function run() {
+function run(config) {
   console.log('Running Codacy Plugin...');
   // In the future, this plugin could be used to:
   // - Fetch code quality results from the Codacy API

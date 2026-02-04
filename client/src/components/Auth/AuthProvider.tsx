@@ -41,7 +41,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (user) {
         // Load user profile from Firestore
         const profileResult = await FirestoreService.getUserProfile(user.uid);
-        if (profileResult.success && profileResult.data) {
+        if (profileResult.success) {
           setUserProfile(profileResult.data);
         } else {
           // Create user profile if it doesn't exist
