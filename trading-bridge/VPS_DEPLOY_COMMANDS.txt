@@ -1,0 +1,405 @@
+# VPS Deployment Commands - Quick Reference
+
+## Initial Setup Commands
+
+### Connect to VPS
+```powershell
+mstsc /v:YOUR_VPS_IP_ADDRESS
+```
+
+### Clone Repository
+```powershell
+cd C:\
+git clone https://github.com/A6-9V/my-drive-projects.git
+cd my-drive-projects\trading-bridge
+```
+
+### Run Deployment
+```powershell
+.\DEPLOY_NOW.ps1
+```
+
+---
+
+## Configuration Commands
+
+### Edit Broker Configuration
+```powershell
+notepad config\brokers.json
+```
+
+### Open MetaEditor for EA Compilation
+```powershell
+.\open-metaeditor.ps1
+```
+
+### Start Trading Bridge
+```powershell
+.\start-bridge.ps1
+```
+
+---
+
+## System Monitoring Commands
+
+### Check if Bridge is Running
+```powershell
+Get-Process python -ErrorAction SilentlyContinue
+```
+
+### Check if MT5 is Running
+```powershell
+Get-Process | Where-Object { $_.ProcessName -like "*terminal*" }
+```
+
+### Check Port 5500 is Listening
+```powershell
+netstat -an | findstr ":5500"
+```
+
+### View Latest Logs
+```powershell
+Get-Content logs\*.log -Tail 50
+```
+
+### View Logs in Real-Time
+```powershell
+Get-Content logs\bridge_*.log -Wait
+```
+
+### Search for Errors in Logs
+```powershell
+Select-String -Path logs\*.log -Pattern "error" -CaseSensitive:$false
+```
+
+---
+
+## Auto-Start Configuration
+
+### Create Scheduled Task for Bridge
+```powershell
+schtasks /create /tn "TradingBridge" /tr "powershell -File C:\my-drive-projects\trading-bridge\start-bridge.ps1" /sc onstart /ru SYSTEM /f
+```
+
+### List Scheduled Tasks
+```powershell
+schtasks /query /tn "TradingBridge"
+```
+
+### Delete Scheduled Task
+```powershell
+schtasks /delete /tn "TradingBridge" /f
+```
+
+### Add MT5 to Startup
+```powershell
+$WshShell = New-Object -ComObject WScript.Shell
+$Shortcut = $WshShell.CreateShortcut("$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\MetaTrader5.lnk")
+$Shortcut.TargetPath = "C:\Program Files\MetaTrader 5 EXNESS\terminal64.exe"
+$Shortcut.Save()
+```
+
+---
+
+## Troubleshooting Commands
+
+### Check Python Version
+```powershell
+python --version
+```
+
+### Reinstall Python Dependencies
+```powershell
+pip install -r requirements.txt --force-reinstall
+```
+
+### Find Process Using Port 5500
+```powershell
+netstat -ano | findstr ":5500"
+```
+
+### Kill Process by PID
+```powershell
+Stop-Process -Id PID -Force
+```
+
+### Test Connection to Port 5500
+```powershell
+Test-NetConnection -ComputerName localhost -Port 5500
+```
+
+### Check Firewall Rules
+```powershell
+Get-NetFirewallRule -DisplayName "*Trading Bridge*"
+```
+
+### Add Firewall Rule Manually
+```powershell
+New-NetFirewallRule -DisplayName "Trading Bridge Port 5500" -Direction Inbound -LocalPort 5500 -Protocol TCP -Action Allow
+```
+
+### Remove Firewall Rule
+```powershell
+Remove-NetFirewallRule -DisplayName "Trading Bridge Port 5500"
+```
+
+---
+
+## Performance Monitoring Commands
+
+### Check CPU Usage
+```powershell
+Get-Counter '\Processor(_Total)\% Processor Time' -SampleInterval 1 -MaxSamples 5
+```
+
+### Check Memory Usage
+```powershell
+Get-Counter '\Memory\Available MBytes'
+```
+
+### Check Disk Space
+```powershell
+Get-PSDrive C | Select-Object Used,Free,@{n='Total';e={$_.Used+$_.Free}},@{n='PercentUsed';e={($_.Used/($_.Used+$_.Free))*100}}
+```
+
+### Check Network Latency to Broker
+```powershell
+Test-Connection -ComputerName api.exness.com -Count 10
+```
+
+### System Information
+```powershell
+Get-ComputerInfo | Select-Object CsName,OsName,OsVersion,OsArchitecture,CsProcessors,CsTotalPhysicalMemory
+```
+
+---
+
+## Backup Commands
+
+### Backup Configuration
+```powershell
+$date = Get-Date -Format "yyyyMMdd_HHmmss"
+$backupPath = "C:\Backups\trading-bridge-$date"
+New-Item -ItemType Directory -Path $backupPath -Force
+Copy-Item -Path "config\*" -Destination $backupPath -Recurse
+Copy-Item -Path "logs\*" -Destination $backupPath -Recurse
+Write-Host "Backup created at: $backupPath"
+```
+
+### Restore Configuration
+```powershell
+$backupPath = "C:\Backups\trading-bridge-YYYYMMDD_HHMMSS"
+Copy-Item -Path "$backupPath\*" -Destination "." -Recurse -Force
+```
+
+---
+
+## Git Commands
+
+### Pull Latest Updates
+```powershell
+git pull origin main
+```
+
+### Check Repository Status
+```powershell
+git status
+```
+
+### View Commit History
+```powershell
+git log --oneline -10
+```
+
+### Discard Local Changes
+```powershell
+git reset --hard HEAD
+git clean -fd
+```
+
+---
+
+## Python Commands
+
+### Create Virtual Environment
+```powershell
+python -m venv venv
+```
+
+### Activate Virtual Environment
+```powershell
+.\venv\Scripts\Activate.ps1
+```
+
+### Deactivate Virtual Environment
+```powershell
+deactivate
+```
+
+### List Installed Packages
+```powershell
+pip list
+```
+
+### Upgrade pip
+```powershell
+python -m pip install --upgrade pip
+```
+
+---
+
+## MT5 Commands
+
+### Start MT5
+```powershell
+Start-Process "C:\Program Files\MetaTrader 5 EXNESS\terminal64.exe"
+```
+
+### Stop MT5
+```powershell
+Stop-Process -Name "terminal64" -Force
+```
+
+### Find MT5 Installation
+```powershell
+Get-ChildItem "C:\Program Files" -Recurse -Filter "terminal64.exe" -ErrorAction SilentlyContinue | Select-Object FullName
+```
+
+---
+
+## Service Management
+
+### Check Service Status
+```powershell
+Get-Service -Name "*trading*"
+```
+
+### Restart VPS (use with caution!)
+```powershell
+Restart-Computer -Force
+```
+
+### Check Uptime
+```powershell
+(Get-Date) - (Get-CimInstance Win32_OperatingSystem).LastBootUpTime
+```
+
+---
+
+## Log Analysis Commands
+
+### Count Total Log Lines
+```powershell
+(Get-Content logs\*.log).Count
+```
+
+### Find Successful Trades
+```powershell
+Select-String -Path logs\*.log -Pattern "success" | Select-Object -Last 20
+```
+
+### Find Failed Trades
+```powershell
+Select-String -Path logs\*.log -Pattern "error|fail" -CaseSensitive:$false | Select-Object -Last 20
+```
+
+### View Logs by Date
+```powershell
+Get-Content logs\bridge_20260202.log
+```
+
+### Archive Old Logs
+```powershell
+$archivePath = "C:\logs-archive\$(Get-Date -Format 'yyyyMM')"
+New-Item -ItemType Directory -Path $archivePath -Force
+Move-Item -Path "logs\*.log" -Destination $archivePath -Exclude "bridge_$(Get-Date -Format 'yyyyMMdd').log"
+```
+
+---
+
+## Security Commands
+
+### Check Windows Updates
+```powershell
+Get-WindowsUpdate
+```
+
+### Install Windows Updates
+```powershell
+Install-WindowsUpdate -AcceptAll -AutoReboot
+```
+
+### List Open Ports
+```powershell
+Get-NetTCPConnection -State Listen | Select-Object LocalAddress,LocalPort,OwningProcess | Sort-Object LocalPort
+```
+
+### Check Windows Defender Status
+```powershell
+Get-MpComputerStatus
+```
+
+---
+
+## Emergency Commands
+
+### Stop All Trading
+```powershell
+# Stop bridge
+Stop-Process -Name "python" -Force
+
+# Stop MT5
+Stop-Process -Name "terminal64" -Force
+
+Write-Host "All trading stopped!" -ForegroundColor Red
+```
+
+### Quick Restart
+```powershell
+# Stop everything
+Stop-Process -Name "python","terminal64" -Force
+
+# Wait 5 seconds
+Start-Sleep -Seconds 5
+
+# Restart bridge
+Start-Process powershell -ArgumentList "-File `"C:\my-drive-projects\trading-bridge\start-bridge.ps1`""
+
+# Restart MT5
+Start-Process "C:\Program Files\MetaTrader 5 EXNESS\terminal64.exe"
+
+Write-Host "System restarted!" -ForegroundColor Green
+```
+
+---
+
+## Useful Aliases (Add to PowerShell Profile)
+
+```powershell
+# Edit PowerShell profile
+notepad $PROFILE
+
+# Add these aliases:
+Set-Alias bridge "C:\my-drive-projects\trading-bridge\start-bridge.ps1"
+Set-Alias logs "Get-Content C:\my-drive-projects\trading-bridge\logs\*.log -Tail 50"
+Set-Alias mt5 "C:\Program Files\MetaTrader 5 EXNESS\terminal64.exe"
+```
+
+---
+
+## One-Liner Commands
+
+### Status Check One-Liner
+```powershell
+Write-Host "Bridge: " -NoNewline; if(Get-Process python -EA SilentlyContinue){"Running"}else{"Stopped"}; Write-Host "MT5: " -NoNewline; if(Get-Process terminal64 -EA SilentlyContinue){"Running"}else{"Stopped"}; Write-Host "Port 5500: " -NoNewline; if(netstat -an | findstr ":5500"){"Listening"}else{"Not listening"}
+```
+
+### Full System Status
+```powershell
+$bridge = if(Get-Process python -EA SilentlyContinue){"✓"}else{"✗"}; $mt5 = if(Get-Process terminal64 -EA SilentlyContinue){"✓"}else{"✗"}; $port = if(netstat -an | findstr ":5500"){"✓"}else{"✗"}; Write-Host "Bridge: $bridge | MT5: $mt5 | Port 5500: $port"
+```
+
+---
+
+**Device:** NUNA 💻 | **User:** @mouyleng | **Org:** @A6-9V  
+**VPS:** Singapore 09 | **Trading:** 24/7
