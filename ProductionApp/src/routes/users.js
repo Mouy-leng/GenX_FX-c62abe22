@@ -203,9 +203,7 @@ router.put('/:id/unlock', authorize('admin'), invalidateCache(['short']), async 
 // @access  Private/Admin
 router.get('/stats/overview', authorize('admin'), cacheMiddleware('short'), async (req, res, next) => {
   try {
-    const now = new Date();
-    
-    // Use a single aggregation pipeline to calculate all statistics in one query
+    // Use MongoDB aggregation with server-side date comparison
     const stats = await User.aggregate([
       {
         $facet: {
@@ -217,7 +215,8 @@ router.get('/stats/overview', authorize('admin'), cacheMiddleware('short'), asyn
                 total: { $sum: 1 },
                 active: { $sum: { $cond: [{ $eq: ['$isActive', true] }, 1, 0] } },
                 verified: { $sum: { $cond: [{ $eq: ['$emailVerified', true] }, 1, 0] } },
-                locked: { $sum: { $cond: [{ $gt: ['$lockUntil', now] }, 1, 0] } }
+                // Use $$NOW for server-side date comparison
+                locked: { $sum: { $cond: [{ $gt: ['$lockUntil', $$NOW] }, 1, 0] } }
               }
             }
           ],

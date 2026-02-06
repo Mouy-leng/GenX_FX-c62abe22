@@ -117,9 +117,10 @@ for project_name, project in sorted_projects:
 - Added `psutil.oneshot()` context manager for efficient multi-attribute access
 - Implemented interruptible sleep for clean shutdown
 - Better exception handling for process access
+- Using small interval (0.1s) for accurate CPU readings
 ```python
 with proc.oneshot():
-    process_info.cpu_usage = proc.cpu_percent(interval=None)
+    process_info.cpu_usage = proc.cpu_percent(interval=0.1)
     process_info.memory_usage = proc.memory_percent()
 ```
 

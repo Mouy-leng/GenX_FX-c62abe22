@@ -14,7 +14,13 @@ class ResponseCache {
    */
   generateKey(req) {
     const { method, originalUrl, user } = req;
-    const userId = user ? user.id : 'anonymous';
+    
+    // Only cache authenticated requests to prevent data leakage
+    if (!user || !user.id) {
+      return null; // Don't cache anonymous requests
+    }
+    
+    const userId = user.id;
     return `${method}:${originalUrl}:${userId}`;
   }
 
@@ -38,9 +44,10 @@ class ResponseCache {
   /**
    * Set cached response
    */
-  set(key, data) {
+  set(key, data, statusCode = 200) {
     this.cache.set(key, {
       data,
+      statusCode,
       timestamp: Date.now()
     });
   }
@@ -114,12 +121,18 @@ const cacheMiddleware = (cacheType = 'medium') => {
     }
 
     const key = cache.generateKey(req);
+    
+    // Skip caching if no valid key (e.g., unauthenticated request)
+    if (!key) {
+      return next();
+    }
+    
     const cached = cache.get(key);
 
     if (cached) {
-      // Return cached response
-      return res.status(200).json({
-        ...cached,
+      // Return cached response with original status code
+      return res.status(cached.statusCode || 200).json({
+        ...cached.data,
         _cached: true,
         _cachedAt: new Date().toISOString()
       });
@@ -132,7 +145,7 @@ const cacheMiddleware = (cacheType = 'medium') => {
     res.json = function(data) {
       // Only cache successful responses (status 200-299)
       if (res.statusCode >= 200 && res.statusCode < 300) {
-        cache.set(key, data);
+        cache.set(key, data, res.statusCode);
       }
       return originalJson(data);
     };
@@ -144,8 +157,9 @@ const cacheMiddleware = (cacheType = 'medium') => {
 /**
  * Invalidate cache middleware
  * Use this for POST, PUT, DELETE routes that modify data
+ * @param {Array<string>} cacheTypes - Specific cache types to invalidate (default: ['short'] for targeted invalidation)
  */
-const invalidateCache = (cacheTypes = ['short', 'medium', 'long']) => {
+const invalidateCache = (cacheTypes = ['short']) => {
   return (req, res, next) => {
     cacheTypes.forEach(type => {
       if (caches[type]) {

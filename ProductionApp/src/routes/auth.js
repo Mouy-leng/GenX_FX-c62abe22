@@ -147,7 +147,8 @@ router.post('/login', async (req, res, next) => {
 // @desc    Get current logged in user
 // @route   GET /api/auth/me
 // @access  Private
-router.get('/me', protect, cacheMiddleware('short'), async (req, res, next) => {
+// Note: Caching removed to avoid serving stale user data after profile updates
+router.get('/me', protect, async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id);
 

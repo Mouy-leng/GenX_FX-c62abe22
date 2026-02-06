@@ -386,12 +386,14 @@ class PythonStartupManager:
             key=lambda x: x[1].priority
         )
         
-        for project_name, project in sorted_projects:
+        total_projects = len(sorted_projects)
+        
+        for i, (project_name, project) in enumerate(sorted_projects):
             self.start_project(project_name)
             
             # Apply inter-project startup delay non-blocking
             # Only wait if there are more projects to start
-            if project.startup_delay > 0 and project != sorted_projects[-1][1]:
+            if project.startup_delay > 0 and i < total_projects - 1:
                 self.logger.info(f"Waiting {project.startup_delay}s before starting next project")
                 time.sleep(project.startup_delay)
     
@@ -470,8 +472,9 @@ class PythonStartupManager:
                             try:
                                 proc = psutil.Process(process_info.pid)
                                 # Use oneshot() context manager for efficient multi-attribute access
+                                # Using small interval for accurate readings while maintaining responsiveness
                                 with proc.oneshot():
-                                    process_info.cpu_usage = proc.cpu_percent(interval=None)
+                                    process_info.cpu_usage = proc.cpu_percent(interval=0.1)
                                     process_info.memory_usage = proc.memory_percent()
                             except psutil.NoSuchProcess:
                                 pass
