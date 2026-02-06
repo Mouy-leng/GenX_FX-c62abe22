@@ -69,18 +69,23 @@ class MetricsCollector:
                 'processes': {}
             }
             
-            # Optimized: Find the first index where timestamp >= cutoff_time using binary search approach
-            # Since timestamps are chronologically ordered in the deque, we can use a more efficient method
             timestamps = list(self.metrics_history['timestamp'])
             
-            # Find the start index efficiently
-            start_idx = 0
+            # Handle empty timestamps
+            if not timestamps:
+                return recent_data
+            
+            # Find the first index where timestamp >= cutoff_time
+            # Using linear search since deque doesn't support binary search efficiently
+            # Future optimization: Use bisect on a sorted list if performance becomes critical
+            start_idx = None
             for i, ts in enumerate(timestamps):
                 if ts >= cutoff_time:
                     start_idx = i
                     break
-            else:
-                # No data within the time range
+            
+            # No data within the time range
+            if start_idx is None:
                 return recent_data
             
             # Extract data from start_idx onwards (much faster than filtering entire history)
