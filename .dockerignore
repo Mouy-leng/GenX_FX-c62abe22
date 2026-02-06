@@ -1,98 +1,72 @@
-# Python cache and bytecode
-**/__pycache__
+# Git and version control
+.git
+.gitignore
+.gitattributes
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Python
+**/__pycache__/
 **/*.pyc
 **/*.pyo
 **/*.pyd
-**/.Python
-**/.pytest_cache
-**/.coverage
+.Python
+.pytest_cache
+.coverage
+.env
 
 # Virtual environments
-**/.venv
-**/venv
-**/env
-**/.env
+.venv
+venv/
+env/
 
 # IDE and editor files
-**/.vscode
-**/.vs
-**/.idea
-**/.project
-**/.classpath
-**/.settings
-**/.toolstarget
-**/*.*proj.user
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
-# Git and version control
-**/.git
-**/.gitignore
-**/.gitattributes
-
-# Docker files (except the one being used)
-**/Dockerfile*
-!Dockerfile.exness
-**/docker-compose*
-**/compose*
-**/.dockerignore
-
-# Node.js (if any)
-**/node_modules
-**/npm-debug.log
-**/package-lock.json
+# Node.js
+node_modules/
+npm-debug.log
+package-lock.json
 
 # Build artifacts and logs
-**/bin
-**/obj
-**/dist
-**/build
-**/logs
-**/*.log
+dist/
+build/
+*.egg-info/
+logs/
+*.log
 
-# Test files and data (exclude from production)
-**/tests
-**/test_*
-**/pytest.ini
-**/.pytest_cache
+# Test files
+tests/
+test_*.py
+pytest.ini
 
-# Documentation and markdown
-LICENSE
-README.md
-**/*.md
-!DEPLOYMENT_SUMMARY.md
+# Documentation
+*.md
 
-# Development scripts
-**/setup*.sh
-**/deploy*.sh
-**/test*.sh
-**/verify*.sh
-**/sync*.sh
-**/monitor.sh
+# Scripts
+*.sh
+*.bat
 
-# Charts and visualization outputs
-**/charts
+# Secrets and config files
+*.key
+*.pem
+*.crt
+secrets.dev.yaml
+values.dev.yaml
 
-# Secrets and config files (use env vars instead)
-**/secrets.dev.yaml
-**/values.dev.yaml
-**/*.key
-**/*.pem
-**/*.crt
+# OS-specific
+.DS_Store
+Thumbs.db
 
-# Temporary files
-**/.tmp
-**/tmp
-**/*.tmp
-**/*.temp
-**/.DS_Store
-**/Thumbs.db
-
-# Database files
-**/*.db
-**/*.sqlite
-**/*.sqlite3
-
-# Large data files
-**/data/*.csv
-**/data/*.xlsx
-**/signal_output
-**/logs
+# Data files
+data/
+signal_output/

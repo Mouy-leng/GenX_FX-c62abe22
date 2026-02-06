@@ -157,23 +157,16 @@ dependencies = [
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
-[dependency-groups]
-dev = [
-    "black (==23.12.1)",
-    "flake8 (==6.1.0)",
-    "isort (==5.13.2)",
-    "bandit (==1.8.6)",
-    "mypy (>=1.18.2,<2.0.0)",
-    "pip-audit (>=2.9.0,<3.0.0)",
-    "pytest (==7.4.4)",
-    "pytest-cov (==4.1.0)",
-    "pytest-asyncio (==0.23.8)",
-    "httpx (>=0.28.1,<0.29.0)",
-    "pybit (>=5.11.0,<6.0.0)",
-    "pytest-mock (>=3.15.1,<4.0.0)"
-]
-
 [tool.poetry.group.dev.dependencies]
+black = "==23.12.1"
+flake8 = "==6.1.0"
+isort = "==5.13.2"
+bandit = "==1.8.6"
+mypy = ">=1.18.2,<2.0.0"
+pip-audit = ">=2.9.0,<3.0.0"
 pytest = "^8.4.2"
-httpx = "^0.28.1"
+pytest-cov = "==4.1.0"
 pytest-asyncio = "^1.2.0"
+httpx = "^0.28.1"
+pybit = ">=5.11.0,<6.0.0"
+pytest-mock = ">=3.15.1,<4.0.0"
