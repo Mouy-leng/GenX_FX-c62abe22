@@ -112,14 +112,13 @@ class ForexIndicators:
         """Calculate Weighted Moving Average"""
         if len(prices) < period:
             return np.full(len(prices), np.nan)
-        
+
         weights = np.arange(1, period + 1)
         wma = np.zeros(len(prices))
         wma[:period-1] = np.nan
-        
+
         # Performance optimization: Cache the constant weight sum
         weight_sum = np.sum(weights)
-        
         for i in range(period-1, len(prices)):
             wma[i] = np.sum(prices[i-period+1:i+1] * weights) / weight_sum
         

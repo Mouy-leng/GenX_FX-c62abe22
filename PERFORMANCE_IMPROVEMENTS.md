@@ -10,7 +10,7 @@ This document summarizes the performance optimizations implemented in the GenX_F
 #### Issue: Blocking Sleep in Monitor Thread
 - **Location:** Line 474
 - **Problem:** Used `time.sleep(10)` which blocked the monitoring thread, making the system unresponsive during shutdown and missing rapid process crashes
-- **Solution:** 
+- **Solution:**
   - Added `threading.Event` for non-blocking waits
   - Event-based waiting allows immediate wakeup on shutdown signal
   - Improved shutdown responsiveness from 10+ seconds to near-instant
@@ -48,7 +48,7 @@ self.process_tree.delete(*self.process_tree.get_children())
 #### Issue 2: Expensive Matplotlib Redraws
 - **Location:** Line 654
 - **Problem:** `canvas.draw()` called every second, causing high CPU usage
-- **Solution:** 
+- **Solution:**
   - Added throttling with 2-second minimum interval
   - Skips redraw if less than 2 seconds since last update
 - **Impact:** ✅ Reduced CPU usage by ~50% for chart rendering
@@ -103,7 +103,7 @@ subprocess.run([sys.executable, '-m', 'pip', 'install'] + missing_packages)
 #### Issue: Redundant Subprocess Calls
 - **Location:** Lines 273-296, called multiple times in quick succession
 - **Problem:** Created new process for each status check, even when called repeatedly
-- **Solution:** 
+- **Solution:**
   - Added caching with 5-second TTL
   - Invalidate cache after state changes (start/stop)
 - **Impact:** ✅ Reduced subprocess overhead by ~80% for repeated status checks
@@ -127,11 +127,11 @@ if use_cache and self._service_status_cache is not None:
 
 #### Issue: Memory Leak in Performance History
 - **Location:** Lines 61, 366-370
-- **Problem:** 
+- **Problem:**
   - Used list for performance history
   - Manual trimming every 1000 records caused reallocation
   - Could grow unbounded during initialization
-- **Solution:** 
+- **Solution:**
   - Replaced list with `collections.deque(maxlen=1000)`
   - Automatic trimming, no reallocation needed
 - **Impact:** ✅ Prevents memory growth, eliminates periodic GC spikes
@@ -254,6 +254,6 @@ The changes maintain backward compatibility and require no changes to configurat
 
 ---
 
-**Last Updated:** 2026-02-06  
-**Author:** GitHub Copilot Agent  
+**Last Updated:** 2026-02-06
+**Author:** GitHub Copilot Agent
 **Repository:** Mouy-leng/GenX_FX-c62abe22
