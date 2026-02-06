@@ -71,7 +71,8 @@ class MetricsCollector:
             
             timestamps = list(self.metrics_history['timestamp'])
             
-            # Handle empty timestamps
+            # Handle empty timestamps - return empty but consistent structure
+            # Callers check for empty timestamp list to determine if data is available
             if not timestamps:
                 return recent_data
             
