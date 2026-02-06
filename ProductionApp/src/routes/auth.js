@@ -1,12 +1,13 @@
 const express = require('express');
 const User = require('../models/User');
 const { protect } = require('../middleware/auth');
+const { cacheMiddleware, invalidateCache } = require('../middleware/cache');
 const router = express.Router();
 
 // @desc    Register user
 // @route   POST /api/auth/register
 // @access  Public
-router.post('/register', async (req, res, next) => {
+router.post('/register', invalidateCache(['short']), async (req, res, next) => {
   try {
     const { name, email, password, role } = req.body;
 
@@ -146,7 +147,7 @@ router.post('/login', async (req, res, next) => {
 // @desc    Get current logged in user
 // @route   GET /api/auth/me
 // @access  Private
-router.get('/me', protect, async (req, res, next) => {
+router.get('/me', protect, cacheMiddleware('short'), async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id);
 

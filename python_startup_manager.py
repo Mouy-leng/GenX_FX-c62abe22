@@ -309,12 +309,11 @@ class PythonStartupManager:
             process_info.state = ProcessState.RUNNING
             process_info.start_time = datetime.now()
             
-            # Add startup delay
-            if project.startup_delay > 0:
-                self.logger.info(f"Applying startup delay of {project.startup_delay} seconds for {project_name}")
-                time.sleep(project.startup_delay)
-            
             self.logger.info(f"Started project {project_name} with PID {process.pid}")
+            
+            # Note: startup_delay is now handled by the caller in start_all_projects
+            # to avoid blocking here
+            
             return True
             
         except Exception as e:
@@ -390,9 +389,11 @@ class PythonStartupManager:
         for project_name, project in sorted_projects:
             self.start_project(project_name)
             
-            # Apply inter-project startup delay
-            if project.startup_delay > 0:
-                time.sleep(1)
+            # Apply inter-project startup delay non-blocking
+            # Only wait if there are more projects to start
+            if project.startup_delay > 0 and project != sorted_projects[-1][1]:
+                self.logger.info(f"Waiting {project.startup_delay}s before starting next project")
+                time.sleep(project.startup_delay)
     
     def stop_all_projects(self):
         """Stop all running projects"""
@@ -445,6 +446,8 @@ class PythonStartupManager:
     
     def monitor_processes(self):
         """Monitor running processes and handle restarts"""
+        check_interval = 10  # Base check interval in seconds
+        
         while self.running:
             try:
                 for project_name, process_info in self.processes.items():
@@ -462,16 +465,25 @@ class PythonStartupManager:
                                 self.logger.info(f"Auto-restarting {project_name} (attempt {process_info.restart_count + 1})")
                                 self.restart_project(project_name)
                         
-                        # Update resource usage
+                        # Update resource usage (less frequently to reduce overhead)
                         if process_info.pid:
                             try:
                                 proc = psutil.Process(process_info.pid)
-                                process_info.cpu_usage = proc.cpu_percent()
-                                process_info.memory_usage = proc.memory_percent()
+                                # Use oneshot() context manager for efficient multi-attribute access
+                                with proc.oneshot():
+                                    process_info.cpu_usage = proc.cpu_percent(interval=None)
+                                    process_info.memory_usage = proc.memory_percent()
                             except psutil.NoSuchProcess:
                                 pass
+                            except psutil.AccessDenied:
+                                # Process exists but we don't have permission
+                                pass
                 
-                time.sleep(10)  # Check every 10 seconds
+                # Sleep with interruptible check to allow clean shutdown
+                for _ in range(check_interval):
+                    if not self.running:
+                        break
+                    time.sleep(1)
                 
             except Exception as e:
                 self.logger.error(f"Error in process monitoring: {e}")
