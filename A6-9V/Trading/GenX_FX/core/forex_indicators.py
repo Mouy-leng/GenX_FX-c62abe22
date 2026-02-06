@@ -117,8 +117,11 @@ class ForexIndicators:
         wma = np.zeros(len(prices))
         wma[:period-1] = np.nan
         
+        # Performance optimization: Cache the constant weight sum
+        weight_sum = np.sum(weights)
+        
         for i in range(period-1, len(prices)):
-            wma[i] = np.sum(prices[i-period+1:i+1] * weights) / np.sum(weights)
+            wma[i] = np.sum(prices[i-period+1:i+1] * weights) / weight_sum
         
         return wma
     
