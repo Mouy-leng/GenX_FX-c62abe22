@@ -65,10 +65,16 @@ const userSchema = new mongoose.Schema({
   toObject: { virtuals: true }
 });
 
-// Indexes
-userSchema.index({ email: 1 });
-userSchema.index({ isActive: 1 });
-userSchema.index({ role: 1 });
+// Indexes for query optimization
+userSchema.index({ email: 1 }, { unique: true }); // Primary lookup, enforce uniqueness
+userSchema.index({ isActive: 1 }); // Filter by active status
+userSchema.index({ role: 1 }); // Filter by role
+userSchema.index({ emailVerified: 1 }); // Filter by verification status
+userSchema.index({ lockUntil: 1 }); // Filter locked accounts
+userSchema.index({ createdAt: -1 }); // Sort by creation date (most recent first)
+userSchema.index({ lastLogin: -1 }); // Sort by last login
+// Compound index for common filter combinations
+userSchema.index({ isActive: 1, role: 1 }); // Filter active users by role
 
 // Virtual for account lock status
 userSchema.virtual('isLocked').get(function() {

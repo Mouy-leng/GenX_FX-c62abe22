@@ -1,6 +1,7 @@
 const express = require('express');
 const User = require('../models/User');
 const { protect, authorize } = require('../middleware/auth');
+const { cacheMiddleware, invalidateCache } = require('../middleware/cache');
 const router = express.Router();
 
 // Apply protection to all routes
@@ -9,7 +10,7 @@ router.use(protect);
 // @desc    Get all users
 // @route   GET /api/users
 // @access  Private/Admin
-router.get('/', authorize('admin'), async (req, res, next) => {
+router.get('/', authorize('admin'), cacheMiddleware('short'), async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
@@ -88,7 +89,7 @@ router.get('/:id', async (req, res, next) => {
 // @desc    Update user
 // @route   PUT /api/users/:id
 // @access  Private/Admin
-router.put('/:id', authorize('admin'), async (req, res, next) => {
+router.put('/:id', authorize('admin'), invalidateCache(['short']), async (req, res, next) => {
   try {
     const { name, email, role, isActive, emailVerified } = req.body;
     
@@ -143,7 +144,7 @@ router.put('/:id', authorize('admin'), async (req, res, next) => {
 // @desc    Delete user
 // @route   DELETE /api/users/:id
 // @access  Private/Admin
-router.delete('/:id', authorize('admin'), async (req, res, next) => {
+router.delete('/:id', authorize('admin'), invalidateCache(['short']), async (req, res, next) => {
   try {
     // Prevent admin from deleting themselves
     if (req.user.id === req.params.id) {
@@ -174,7 +175,7 @@ router.delete('/:id', authorize('admin'), async (req, res, next) => {
 // @desc    Unlock user account
 // @route   PUT /api/users/:id/unlock
 // @access  Private/Admin
-router.put('/:id/unlock', authorize('admin'), async (req, res, next) => {
+router.put('/:id/unlock', authorize('admin'), invalidateCache(['short']), async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id);
 
@@ -200,34 +201,56 @@ router.put('/:id/unlock', authorize('admin'), async (req, res, next) => {
 // @desc    Get user statistics
 // @route   GET /api/users/stats
 // @access  Private/Admin
-router.get('/stats/overview', authorize('admin'), async (req, res, next) => {
+router.get('/stats/overview', authorize('admin'), cacheMiddleware('short'), async (req, res, next) => {
   try {
-    const totalUsers = await User.countDocuments();
-    const activeUsers = await User.countDocuments({ isActive: true });
-    const verifiedUsers = await User.countDocuments({ emailVerified: true });
-    const lockedUsers = await User.countDocuments({ lockUntil: { $gt: new Date() } });
-    
-    const usersByRole = await User.aggregate([
-      { $group: { _id: '$role', count: { $sum: 1 } } }
+    // Use MongoDB aggregation with server-side date comparison
+    const stats = await User.aggregate([
+      {
+        $facet: {
+          // Calculate user counts using conditional sums
+          counts: [
+            {
+              $group: {
+                _id: null,
+                total: { $sum: 1 },
+                active: { $sum: { $cond: [{ $eq: ['$isActive', true] }, 1, 0] } },
+                verified: { $sum: { $cond: [{ $eq: ['$emailVerified', true] }, 1, 0] } },
+                // Use $$NOW for server-side date comparison
+                locked: { $sum: { $cond: [{ $gt: ['$lockUntil', $$NOW] }, 1, 0] } }
+              }
+            }
+          ],
+          // Group by role
+          byRole: [
+            { $group: { _id: '$role', count: { $sum: 1 } } }
+          ],
+          // Get recent users
+          recentUsers: [
+            { $sort: { createdAt: -1 } },
+            { $limit: 5 },
+            { $project: { name: 1, email: 1, role: 1, isActive: 1, createdAt: 1 } }
+          ]
+        }
+      }
     ]);
 
-    const recentUsers = await User.find()
-      .select('name email role isActive createdAt')
-      .sort({ createdAt: -1 })
-      .limit(5);
+    // Extract and format the results
+    const counts = stats[0].counts[0] || { total: 0, active: 0, verified: 0, locked: 0 };
+    const usersByRole = stats[0].byRole.reduce((acc, curr) => {
+      acc[curr._id] = curr.count;
+      return acc;
+    }, {});
+    const recentUsers = stats[0].recentUsers;
 
     res.status(200).json({
       success: true,
       data: {
         statistics: {
-          total: totalUsers,
-          active: activeUsers,
-          verified: verifiedUsers,
-          locked: lockedUsers,
-          byRole: usersByRole.reduce((acc, curr) => {
-            acc[curr._id] = curr.count;
-            return acc;
-          }, {})
+          total: counts.total,
+          active: counts.active,
+          verified: counts.verified,
+          locked: counts.locked,
+          byRole: usersByRole
         },
         recentUsers
       }
