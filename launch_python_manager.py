@@ -96,10 +96,10 @@ class PythonManagerLauncher:
             return True
         
         try:
-            for package in missing_packages:
-                self.logger.info(f"Installing {package}...")
-                subprocess.run([sys.executable, '-m', 'pip', 'install', package], check=True)
-                self.logger.info(f"+ {package} installed successfully")
+            # Batch install all missing packages in a single pip command for better performance
+            self.logger.info(f"Installing packages: {', '.join(missing_packages)}")
+            subprocess.run([sys.executable, '-m', 'pip', 'install'] + missing_packages, check=True)
+            self.logger.info(f"+ All packages installed successfully")
             
             return True
             

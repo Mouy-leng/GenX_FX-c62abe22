@@ -76,6 +76,7 @@ class PythonStartupManager:
         self.processes: Dict[str, ProcessInfo] = {}
         self.running = False
         self.monitor_thread: Optional[threading.Thread] = None
+        self.monitor_event = threading.Event()  # Non-blocking event for responsive monitoring
         
         # Setup logging
         self.setup_logging()
@@ -471,11 +472,12 @@ class PythonStartupManager:
                             except psutil.NoSuchProcess:
                                 pass
                 
-                time.sleep(10)  # Check every 10 seconds
+                # Use event-based waiting instead of blocking sleep for responsive shutdown
+                self.monitor_event.wait(timeout=10)  # Check every 10 seconds, but responsive to stop signals
                 
             except Exception as e:
                 self.logger.error(f"Error in process monitoring: {e}")
-                time.sleep(5)
+                self.monitor_event.wait(timeout=5)  # Non-blocking wait on error
     
     def start_manager(self):
         """Start the Python startup manager"""
@@ -495,6 +497,9 @@ class PythonStartupManager:
         """Stop the Python startup manager"""
         self.logger.info("Stopping Python Startup Manager...")
         self.running = False
+        
+        # Signal the monitor thread to wake up immediately for responsive shutdown
+        self.monitor_event.set()
         
         # Stop all projects
         self.stop_all_projects()

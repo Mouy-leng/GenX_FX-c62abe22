@@ -58,7 +58,7 @@ class MetricsCollector:
                 self.metrics_history['processes'][process_name]['status'].append(metrics.get('status', 'unknown'))
     
     def get_recent_metrics(self, minutes: int = 60) -> Dict[str, Any]:
-        """Get metrics from the last N minutes"""
+        """Get metrics from the last N minutes with optimized timestamp filtering"""
         cutoff_time = datetime.now() - timedelta(minutes=minutes)
         
         with self.lock:
@@ -69,17 +69,36 @@ class MetricsCollector:
                 'processes': {}
             }
             
-            for i, ts in enumerate(self.metrics_history['timestamp']):
+            timestamps = list(self.metrics_history['timestamp'])
+            
+            # Handle empty timestamps - return empty but consistent structure
+            # Callers check for empty timestamp list to determine if data is available
+            if not timestamps:
+                return recent_data
+            
+            # Find the first index where timestamp >= cutoff_time
+            # Using linear search since deque doesn't support binary search efficiently
+            # Future optimization: Use bisect on a sorted list if performance becomes critical
+            start_idx = None
+            for i, ts in enumerate(timestamps):
                 if ts >= cutoff_time:
-                    recent_data['timestamp'].append(ts)
-                    recent_data['cpu_usage'].append(self.metrics_history['cpu_usage'][i])
-                    recent_data['memory_usage'].append(self.metrics_history['memory_usage'][i])
+                    start_idx = i
+                    break
+            
+            # No data within the time range
+            if start_idx is None:
+                return recent_data
+            
+            # Extract data from start_idx onwards (much faster than filtering entire history)
+            recent_data['timestamp'] = timestamps[start_idx:]
+            recent_data['cpu_usage'] = list(self.metrics_history['cpu_usage'])[start_idx:]
+            recent_data['memory_usage'] = list(self.metrics_history['memory_usage'])[start_idx:]
             
             for process_name, process_data in self.metrics_history['processes'].items():
                 recent_data['processes'][process_name] = {
-                    'cpu': list(process_data['cpu'])[-len(recent_data['timestamp']):],
-                    'memory': list(process_data['memory'])[-len(recent_data['timestamp']):],
-                    'status': list(process_data['status'])[-len(recent_data['timestamp']):]
+                    'cpu': list(process_data['cpu'])[start_idx:],
+                    'memory': list(process_data['memory'])[start_idx:],
+                    'status': list(process_data['status'])[start_idx:]
                 }
             
             return recent_data
@@ -180,6 +199,10 @@ class ProcessMonitorDashboard:
         # Threading and update controls
         self.monitoring_active = False
         self.update_queue = queue.Queue()
+        
+        # Performance optimization: Track if chart data has changed to avoid unnecessary redraws
+        self.last_chart_update_time = None
+        self.chart_update_interval = 2.0  # Only update charts every 2 seconds
         
         # Create main window
         self.root = tk.Tk()
@@ -557,12 +580,9 @@ class ProcessMonitorDashboard:
     
     def update_process_display(self):
         """Update process display"""
-        # Clear existing items
-        for item in self.process_tree.get_children():
-            self.process_tree.delete(item)
-        
-        for item in self.detailed_process_tree.get_children():
-            self.detailed_process_tree.delete(item)
+        # Efficiently clear all items in one operation instead of looping
+        self.process_tree.delete(*self.process_tree.get_children())
+        self.detailed_process_tree.delete(*self.detailed_process_tree.get_children())
         
         # Add current processes
         for project_name, process_info in self.startup_manager.processes.items():
@@ -592,8 +612,15 @@ class ProcessMonitorDashboard:
             ))
     
     def update_charts(self):
-        """Update metrics charts"""
+        """Update metrics charts with performance optimization"""
         try:
+            # Throttle chart updates to avoid expensive matplotlib redraws
+            current_time = time.time()
+            if self.last_chart_update_time and (current_time - self.last_chart_update_time < self.chart_update_interval):
+                return  # Skip update if less than 2 seconds since last update
+            
+            self.last_chart_update_time = current_time
+            
             recent_metrics = self.metrics_collector.get_recent_metrics(60)  # Last 60 minutes
             
             if not recent_metrics['timestamp']:
@@ -650,7 +677,7 @@ class ProcessMonitorDashboard:
             self.ax1.legend(loc='upper right', facecolor='#3b3b3b', edgecolor='white')
             self.ax2.legend(loc='upper right', facecolor='#3b3b3b', edgecolor='white')
             
-            # Redraw canvas
+            # Redraw canvas (expensive operation, now throttled)
             self.canvas.draw()
             
         except Exception as e:

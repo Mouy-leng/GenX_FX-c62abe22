@@ -34,6 +34,11 @@ class WindowsServiceManager:
         self.script_dir = Path(__file__).parent.absolute()
         self.startup_manager_path = self.script_dir / "python_startup_manager.py"
         
+        # Performance: Cache service status to avoid repeated subprocess calls
+        self._service_status_cache = None
+        self._service_status_cache_time = None
+        self._cache_ttl = 5  # Cache for 5 seconds
+        
     def check_admin_privileges(self) -> bool:
         """Check if running with administrator privileges"""
         try:
@@ -241,6 +246,9 @@ if __name__ == '__main__':
             cmd = ["sc", "start", self.service_name]
             result = subprocess.run(cmd, capture_output=True, text=True)
             
+            # Invalidate cache after service state change
+            self._service_status_cache = None
+            
             if result.returncode == 0:
                 self.logger.info("Service started successfully")
                 return True
@@ -258,6 +266,9 @@ if __name__ == '__main__':
             cmd = ["sc", "stop", self.service_name]
             result = subprocess.run(cmd, capture_output=True, text=True)
             
+            # Invalidate cache after service state change
+            self._service_status_cache = None
+            
             if result.returncode == 0:
                 self.logger.info("Service stopped successfully")
                 return True
@@ -270,26 +281,39 @@ if __name__ == '__main__':
             self.logger.error(f"Error stopping service: {e}")
             return False
     
-    def get_service_status(self) -> str:
-        """Get Windows service status"""
+    def get_service_status(self, use_cache: bool = True) -> str:
+        """Get Windows service status with optional caching to reduce subprocess overhead"""
+        # Check cache first if enabled
+        if use_cache and self._service_status_cache is not None:
+            if self._service_status_cache_time:
+                cache_age = time.time() - self._service_status_cache_time
+                if cache_age < self._cache_ttl:
+                    return self._service_status_cache
+        
         try:
             cmd = ["sc", "query", self.service_name]
             result = subprocess.run(cmd, capture_output=True, text=True)
             
+            status = "error"
             if result.returncode == 0:
                 output = result.stdout
                 if "RUNNING" in output:
-                    return "running"
+                    status = "running"
                 elif "STOPPED" in output:
-                    return "stopped"
+                    status = "stopped"
                 elif "START_PENDING" in output:
-                    return "starting"
+                    status = "starting"
                 elif "STOP_PENDING" in output:
-                    return "stopping"
+                    status = "stopping"
                 else:
-                    return "unknown"
+                    status = "unknown"
             else:
-                return "not_installed"
+                status = "not_installed"
+            
+            # Update cache
+            self._service_status_cache = status
+            self._service_status_cache_time = time.time()
+            return status
                 
         except Exception as e:
             self.logger.error(f"Error getting service status: {e}")

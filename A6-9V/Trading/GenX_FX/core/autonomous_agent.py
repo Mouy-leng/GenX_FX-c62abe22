@@ -11,8 +11,7 @@ import numpy as np
 import pandas as pd
 from dataclasses import dataclass
 from enum import Enum
-
-# Import statements moved to avoid circular imports
+from collections import deque  # For efficient bounded performance history
 
 
 class AgentState(Enum):
@@ -57,8 +56,8 @@ class AutonomousAgent:
         self.broker = None
         self.metrics = None
         
-        # Performance tracking
-        self.performance_history = []
+        # Performance tracking - Use deque with maxlen to prevent memory leaks
+        self.performance_history = deque(maxlen=1000)
         self.learning_metrics = {}
         self.last_update = datetime.now()
         
@@ -363,11 +362,8 @@ class AutonomousAgent:
             'total_trades': await self.metrics.get_total_trades()
         }
         
+        # deque automatically handles maxlen, no need for manual trimming
         self.performance_history.append(current_performance)
-        
-        # Keep only last 1000 records
-        if len(self.performance_history) > 1000:
-            self.performance_history = self.performance_history[-1000:]
     
     async def _handle_error(self, error: Exception) -> None:
         """Handle errors gracefully"""

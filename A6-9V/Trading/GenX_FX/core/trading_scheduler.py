@@ -352,31 +352,28 @@ class TradingScheduler:
         return status
     
     def get_best_pairs_now(self) -> List[str]:
-        """Get the best trading pairs for current time"""
+        """Get the best trading pairs for current time with optimized set-based lookups"""
         now_utc = datetime.now(pytz.UTC)
         active_sessions = self.get_active_sessions(now_utc)
         
-        # Priority: High volatility sessions first
-        best_pairs = []
+        # Use set for O(1) membership checks instead of O(n) list checks
+        best_pairs_set = set()
         
+        # Priority: High volatility sessions first
         for session_type in active_sessions:
             session = self.sessions[session_type]
             if session.is_high_volatility:
-                best_pairs.extend(session.preferred_pairs)
+                best_pairs_set.update(session.preferred_pairs)
         
         # Add regular session pairs
         for session_type in active_sessions:
             session = self.sessions[session_type]
-            for pair in session.preferred_pairs:
-                if pair not in best_pairs:
-                    best_pairs.append(pair)
+            best_pairs_set.update(session.preferred_pairs)
         
         # Always include crypto pairs
-        for pair in ["BTCUSD", "XAUUSD", "BTCXAU"]:
-            if pair not in best_pairs:
-                best_pairs.append(pair)
+        best_pairs_set.update(["BTCUSD", "XAUUSD", "BTCXAU"])
         
-        return best_pairs
+        return list(best_pairs_set)
     
     def get_strategies_for_session(self, session_type: TradingSession) -> List[str]:
         """Get recommended strategies for a session"""
